@@ -6,7 +6,7 @@ import Canvas from './Canvas'
 
 function App() {
 
-    const draw = (ctx, frameCount) => {
+    const draw = (ctx:CanvasRenderingContext2D, frameCount:number) => {
       ctx.fillStyle = '#0000FF';
       ctx.beginPath();
       const pos = 600 * Math.sin(frameCount * 0.05) ** 2;
@@ -14,7 +14,7 @@ function App() {
       ctx.fill();
     };
 
-    const draw1 = (ctx, frameCount) => {
+  const draw1 = (ctx: CanvasRenderingContext2D, frameCount: number) => {
       ctx.fillStyle = '#000000';
       ctx.beginPath();
       ctx.arc(50, 100, 20 * Math.sin(frameCount * 0.05) ** 2, 0, 2 * Math.PI);
@@ -24,9 +24,10 @@ function App() {
     const props = {
       width: 800,
       height: 500,
-      draw: (ctx, count) => {
-        return draw1(ctx, count) || draw(ctx, count);
-
+      draw: (ctx: CanvasRenderingContext2D, count: number) => {
+        draw1(ctx, count);
+        draw(ctx, count);
+        return;
       }
     };
   

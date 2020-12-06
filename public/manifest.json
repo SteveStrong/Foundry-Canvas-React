@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "Foundry Canvas",
+  "name": "Foundry Canvas React sample",
   "icons": [
     {
       "src": "favicon.ico",

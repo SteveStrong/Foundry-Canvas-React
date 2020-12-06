@@ -1,0 +1,49 @@
+{
+  "compilerOptions": {
+    "baseUrl": "./src",
+    "target": "es2015",
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext",
+      "es2015"
+    ],
+    "strictNullChecks": false,
+    "allowJs": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react",
+    "strictPropertyInitialization": false,
+    "noImplicitThis": true,
+    "noImplicitAny": false,
+    "declaration": true,
+    "outDir": "dist",
+    "sourceMap": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "noFallthroughCasesInSwitch": true
+  },
+  "plugins": [
+    {
+      "name": "typescript-tslint-plugin"
+    }
+  ],
+  "include": [
+    "src",
+    "src/**/*",
+    "**/*.spec.tsx",
+    "**/*.spec.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "**/*.spec.js"
+  ]
+}
