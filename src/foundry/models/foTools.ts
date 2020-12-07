@@ -509,7 +509,7 @@ export class foTools {
   }
 
   overrideComputed(obj: any, properties: any) {
-    Tools.forEachKeyValue(properties, function(key, value) {
+    Tools.forEachKeyValue(properties, (key, value) => {
       try {
         if (Tools.isFunction(value)) {
           Tools.defineCalculatedProperty(obj, key, value);
@@ -523,7 +523,7 @@ export class foTools {
   }
 
   extendComputed(obj: any, properties: any) {
-    Tools.forEachKeyValue(properties, function(key, value) {
+    Tools.forEachKeyValue(properties, (key, value) => {
       try {
         if (!obj[key]) {
           if (Tools.isFunction(value)) {

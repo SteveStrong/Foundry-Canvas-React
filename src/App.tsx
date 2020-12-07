@@ -1,6 +1,7 @@
 // https://medium.com/@pdx.lucasm/canvas-with-react-js-32e133c05258
 
 import { Canvas } from 'Canvas';
+import { foPage } from 'foundry/models/foPage.model';
 
 import React, { FunctionComponent, ReactElement } from 'react';
 
@@ -26,18 +27,24 @@ export const App: FunctionComponent<any> = (props: any): ReactElement => {
         draw(ctx, count, 70);
     };
 
-    // const shape = new foText2D({
-    //     text: 'Hello World'
-    // });
+    const shape = new foPage({
+        text: 'Hello World',
+        width: 800,
+        height: 500,
+        x: -55,
+        y: -45
+    });
 
     const canvasParams = {
         width: 800,
         height: 500,
+         pinX: 55,
         title: 'Render A model to the canvas',
         draw: (ctx: CanvasRenderingContext2D, count: number) => {
+          shape.drawGrid(ctx);
+          shape.drawAxis(ctx);
             draw1(ctx, count);
             megadraw(ctx, count);
-            //shape.render(ctx);
             return;
         }
     };
