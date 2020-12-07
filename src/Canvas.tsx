@@ -9,9 +9,9 @@ export const Canvas: FunctionComponent<any> = (props: any): ReactElement => {
 
     return (
         <Fragment>
-            <h1>Hello world!</h1>
-            <ToJSON {...props} />
+            <h1>{props.title}</h1>
             <canvas ref={canvasRef} {...rest} />
+            <ToJSON {...props} />
         </Fragment>
     );
 };
