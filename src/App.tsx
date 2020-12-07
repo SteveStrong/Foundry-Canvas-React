@@ -1,12 +1,11 @@
 // https://medium.com/@pdx.lucasm/canvas-with-react-js-32e133c05258
 
 import { Canvas } from 'Canvas';
+
 import React, { FunctionComponent, ReactElement } from 'react';
 
-
 export const App: FunctionComponent<any> = (props: any): ReactElement => {
-    
-  const draw = (ctx: CanvasRenderingContext2D, frameCount: number, loc = 0) => {
+    const draw = (ctx: CanvasRenderingContext2D, frameCount: number, loc = 0) => {
         ctx.fillStyle = '#0000FF';
         ctx.beginPath();
         const pos = 600 * Math.sin(frameCount * 0.05) ** 2;
@@ -27,6 +26,10 @@ export const App: FunctionComponent<any> = (props: any): ReactElement => {
         draw(ctx, count, 70);
     };
 
+    // const shape = new foText2D({
+    //     text: 'Hello World'
+    // });
+
     const canvasParams = {
         width: 800,
         height: 500,
@@ -34,6 +37,7 @@ export const App: FunctionComponent<any> = (props: any): ReactElement => {
         draw: (ctx: CanvasRenderingContext2D, count: number) => {
             draw1(ctx, count);
             megadraw(ctx, count);
+            //shape.render(ctx);
             return;
         }
     };

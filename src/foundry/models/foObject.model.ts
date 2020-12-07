@@ -19,18 +19,7 @@ export function using<T extends IDisposable>(
   return result;
 }
 
-// // Example use:
-// class Camera implements IDisposable {
-//     takePicture() { /* omitted */ }
-//     // etc...
-//     dispose() {
-//         navigator.camera.cleanup();
-//     }
-// }
 
-// using(new Camera(), (camera) => {
-//     camera.takePicture();
-// });
 
 export class foObject implements iObject {
   static beep() {

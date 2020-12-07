@@ -1,6 +1,6 @@
 import { useRef, useEffect } from 'react';
 
-export const useCanvas2D = (draw: (arg0: CanvasRenderingContext2D, arg1: number) => void) => {
+export function useCanvas2D(draw: (arg0: CanvasRenderingContext2D, arg1: number) => void) {
   const canvasRef = useRef(null);
 
   const clear = (ctx: CanvasRenderingContext2D) => {
@@ -18,7 +18,7 @@ export const useCanvas2D = (draw: (arg0: CanvasRenderingContext2D, arg1: number)
     if (canvasRef.current) {
       const canvas: HTMLCanvasElement = canvasRef.current;
       const context: CanvasRenderingContext2D = canvas.getContext('2d');
-      
+
       const render = () => {
         clear(context);
         border(context);
@@ -35,4 +35,4 @@ export const useCanvas2D = (draw: (arg0: CanvasRenderingContext2D, arg1: number)
   }, [draw]);
 
   return canvasRef;
-};
+}
