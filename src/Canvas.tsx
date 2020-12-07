@@ -1,11 +1,18 @@
-import React, { useRef, useEffect } from 'react';
-import useCanvas from './CanvasHook';
+import { useCanvas2D } from 'CanvasHook';
+import React, { Fragment, FunctionComponent, ReactElement } from 'react';
+import { ToJSON } from './core/foRenderer'
 
-const Canvas = (props:any) => {
+
+export const Canvas: FunctionComponent<any> = (props: any): ReactElement => {
     const { draw, ...rest } = props;
-    const canvasRef = useCanvas(draw);
+    const canvasRef = useCanvas2D(draw);
 
-    return <canvas ref={canvasRef} {...rest} />;
+    return (
+        <Fragment>
+            <h1>{props.title}</h1>
+            <canvas ref={canvasRef} {...rest} />
+            <ToJSON {...props} />
+        </Fragment>
+    );
 };
 
-export default Canvas;
