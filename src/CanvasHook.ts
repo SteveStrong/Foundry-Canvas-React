@@ -1,6 +1,6 @@
 import { useRef, useEffect } from 'react';
 
-const useCanvas = (draw: (arg0: CanvasRenderingContext2D, arg1: number) => void) => {
+export const useCanvas2D = (draw: (arg0: CanvasRenderingContext2D, arg1: number) => void) => {
   const canvasRef = useRef(null);
 
   const clear = (ctx: CanvasRenderingContext2D) => {
@@ -36,5 +36,3 @@ const useCanvas = (draw: (arg0: CanvasRenderingContext2D, arg1: number) => void)
 
   return canvasRef;
 };
-
-export default useCanvas;

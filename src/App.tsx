@@ -1,8 +1,8 @@
 // https://medium.com/@pdx.lucasm/canvas-with-react-js-32e133c05258
 
+import { Canvas } from 'Canvas';
 import React from 'react';
 
-import Canvas from './Canvas';
 
 function App() {
     const draw = (ctx: CanvasRenderingContext2D, frameCount: number, loc=0) => {
@@ -40,7 +40,7 @@ function App() {
 
     return (
         <div>
-            <h1>Hello world!</h1>
+
             <Canvas {...props} />
         </div>
     );
