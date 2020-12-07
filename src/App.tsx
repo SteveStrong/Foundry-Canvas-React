@@ -3,6 +3,7 @@
 import { Canvas } from 'Canvas';
 import { foPage } from 'foundry/models/foPage.model';
 import { foShape2D } from 'foundry/models/foShape2D.model';
+import { foText2D } from 'foundry/models/foText2D.model';
 
 import React, { FunctionComponent, ReactElement } from 'react';
 
@@ -43,6 +44,16 @@ export const App: FunctionComponent<any> = (props: any): ReactElement => {
             x:200,
             y:300
         });
+    
+            const text = new foText2D({
+                text: 'Hello World',
+                background: 'pink',
+                color: 'black',
+                width: 100,
+                height: 50,
+                x: 500,
+                y: 150
+            });
 
     const canvasParams = {
         width: 1000,
@@ -54,6 +65,7 @@ export const App: FunctionComponent<any> = (props: any): ReactElement => {
 
             page.render(ctx);
             shape.render(ctx);
+            text.render(ctx);
             //shape.x = pos;
              shape.angle = pos;
             draw1(ctx, count);

@@ -8,6 +8,8 @@ import { foShape2D } from './foShape2D.model';
 
 import { foUnDo } from './foUnDo';
 
+import { RuntimeType } from './foRuntimeType';
+
 // ctx.textAlign = "left" || "right" || "center" || "start" || "end";
 
 // ctx.textBaseline = "top" || "hanging" || "middle" || "alphabetic" || "ideographic" || "bottom";
@@ -76,13 +78,13 @@ export class foText2D extends foShape2D {
 
   setupPreDraw() {
     const preDraw = (ctx: CanvasRenderingContext2D): void => {
-      if ( this.resize) {
+      if (this.resize) {
         const textMetrics = ctx.measureText(this.text);
         this.width = textMetrics.width + ((this.margin && this.margin.width) || 0);
         this.height = this.size + ((this.margin && this.margin.height) || 0);
       }
-      this.createConnectionPoints();
-      this.createHandles();
+      //this.createConnectionPoints();
+      //this.createHandles();
       this.preDraw = undefined;
     };
 
@@ -96,12 +98,12 @@ export class foText2D extends foShape2D {
     let firstWord = words[0];
     let size = ctx.measureText(firstWord);
     const perChar = size.width / firstWord.length;
-    const maxChar = Math.ceil( maxWidth / perChar) - 3;
+    const maxChar = Math.ceil(maxWidth / perChar) - 3;
 
     //fill result based on running size
     let phrase = '';
     words.forEach(word => {
-      if ( phrase.length + word.length + 1 <= maxChar ) {
+      if (phrase.length + word.length + 1 <= maxChar) {
         phrase += ` ${word}`;
       } else {
         result.push(phrase);
@@ -124,8 +126,8 @@ export class foText2D extends foShape2D {
     ctx.strokeStyle = 'red';
     ctx.lineWidth = 1;
     this.drawOutline(ctx);
-    this.drawHandles(ctx);
-    this.drawConnectionPoints(ctx);
+    //this.drawHandles(ctx);
+    //this.drawConnectionPoints(ctx);
     this.drawPin(ctx);
   }
 
@@ -149,7 +151,7 @@ export class foText2D extends foShape2D {
 
     let list = this.splitText(ctx, text, this.maxTextWidth());
     y -= (list.length / 2) * dy;
-    list.forEach( txt => {
+    list.forEach(txt => {
       this.drawText(ctx, txt, x, y);
       y += dy; //rule of thumb to prevent true measure
     });
@@ -193,7 +195,7 @@ export class foInputText2D extends foText2D {
     return { text: this.text, start: this.cursorStart, end: this.cursorEnd };
   }
 
-  public doubleClick = (keys:any) => {
+  public doubleClick = (keys: any) => {
   }
 
   public openEditor = () => {
@@ -403,6 +405,6 @@ export class foInputText2D extends foText2D {
   // }
 }
 
-import { RuntimeType } from '../foRuntimeType';
-RuntimeType.define(foText2D);
-RuntimeType.define(foInputText2D);
+
+//RuntimeType.define(foText2D);
+//RuntimeType.define(foInputText2D);
