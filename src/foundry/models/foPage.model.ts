@@ -15,10 +15,16 @@ import { foObject } from './foObject.model';
 export class foPage extends foGlyph2D {
   gridSizeX: number = 50;
   gridSizeY: number = 50;
-  showBoundry: boolean = false;
+  showBoundry: boolean = true;
 
 
-
+  constructor(
+    properties?: any,
+    parent?: foObject
+  ) {
+    super(properties, parent);
+    this.override(properties);
+  }
   
 
   protected _marginX: number;
@@ -205,7 +211,6 @@ export class foPage extends foGlyph2D {
 
 
   public render(ctx: CanvasRenderingContext2D, deep: boolean = true) {
-    ///this._ctx = ctx;
     ctx.clearRect(0, 0, this.width, this.height);
 
     ctx.save();
@@ -215,7 +220,7 @@ export class foPage extends foGlyph2D {
     this.preDraw && this.preDraw(ctx);
     this.draw(ctx);
     //this.drawHover && this.drawHover(ctx);
-    //this.postDraw && this.postDraw(ctx);
+    this.postDraw && this.postDraw(ctx);
 
     // deep &&
     //   this._subcomponents.forEach(item => {
@@ -223,7 +228,7 @@ export class foPage extends foGlyph2D {
     //   });
     ctx.restore();
 
-    //this.showBoundry && this.afterRender(ctx);
+    this.showBoundry && this.afterRender(ctx);
   }
 
   public preDraw = (ctx: CanvasRenderingContext2D): void => {

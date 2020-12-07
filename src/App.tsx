@@ -2,6 +2,7 @@
 
 import { Canvas } from 'Canvas';
 import { foPage } from 'foundry/models/foPage.model';
+import { foShape2D } from 'foundry/models/foShape2D.model';
 
 import React, { FunctionComponent, ReactElement } from 'react';
 
@@ -27,22 +28,34 @@ export const App: FunctionComponent<any> = (props: any): ReactElement => {
         draw(ctx, count, 70);
     };
 
-    const shape = new foPage({
+    const page = new foPage({
         text: 'Hello World',
+        color: 'yellow',
         width: 800,
         height: 500,
-        x: -55,
-        y: -45
+        marginX: 100
     });
 
+        const shape = new foShape2D({
+            text: 'Hello World',
+            width: 100,
+            height: 50,
+            x:200,
+            y:300
+        });
+
     const canvasParams = {
-        width: 800,
-        height: 500,
-         pinX: 55,
+        width: 1000,
+        height: 800,
         title: 'Render A model to the canvas',
         draw: (ctx: CanvasRenderingContext2D, count: number) => {
-          shape.drawGrid(ctx);
-          shape.drawAxis(ctx);
+            const pos = 600 * Math.sin(count * 0.05) ** 2;
+
+
+            page.render(ctx);
+            shape.render(ctx);
+            //shape.x = pos;
+             shape.angle = pos;
             draw1(ctx, count);
             megadraw(ctx, count);
             return;
