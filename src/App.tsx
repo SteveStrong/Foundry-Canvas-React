@@ -7,30 +7,12 @@ import { foText2D } from 'foundry/models/foText2D.model';
 
 import React, { FunctionComponent, ReactElement } from 'react';
 
+import lang from './data/sampleaxl.json';
+import rules from './data/sampleaxr.json';
+
 export const App: FunctionComponent<any> = (props: any): ReactElement => {
-    const draw = (ctx: CanvasRenderingContext2D, frameCount: number, loc = 0) => {
-        ctx.fillStyle = '#0000FF';
-        ctx.beginPath();
-        const pos = 600 * Math.sin(frameCount * 0.05) ** 2;
-        ctx.arc(15 + pos, loc + 50 + 0.2 * pos, 1 + 0.05 * pos, 0, 2 * Math.PI);
-        ctx.fill();
-    };
-
-    const draw1 = (ctx: CanvasRenderingContext2D, frameCount: number) => {
-        ctx.fillStyle = '#000000';
-        ctx.beginPath();
-        ctx.arc(100, 100, 10 + 20 * Math.sin(frameCount * 0.05) ** 2, 0, 2 * Math.PI);
-        ctx.fill();
-    };
-
-    const megadraw = (ctx: CanvasRenderingContext2D, count: number) => {
-        draw(ctx, count, 20);
-        draw(ctx, count, 45);
-        draw(ctx, count, 70);
-    };
-
-    const page = new foPage({
-        opacity: .02,
+    const page1 = new foPage({
+        opacity: 0.02,
         color: 'orange',
         width: 1000,
         height: 1000
@@ -44,8 +26,8 @@ export const App: FunctionComponent<any> = (props: any): ReactElement => {
         opacity: 3.0,
         width: 5,
         height: 5,
-        x: page.width / 2,
-        y: page.height / 2
+        x: page1.width / 2,
+        y: page1.height / 2
     });
 
     const list = '0,1,2,3,4,5,6,7,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26'.split(',');
@@ -71,32 +53,49 @@ export const App: FunctionComponent<any> = (props: any): ReactElement => {
     //page.setPinLeft();
     //page.angle = 200;
 
-    const canvasParams = {
+    const canvas1Params = {
         width: 1100,
         height: 1100,
-        title: 'Render A model to the canvas',
+        title: 'Testing Rendering of Bolt Holes',
         draw: (ctx: CanvasRenderingContext2D, count: number) => {
             const pos = 120 * Math.sin(count * 0.05) ** 2;
 
-            page.render(ctx);
+            page1.render(ctx);
 
             shape.render(ctx);
 
-            shape.subcomponents.forEach(item => {
+            shape.subcomponents.forEach((item) => {
                 item.angle += 1;
-                item.pinX = (): number => { return -220 + pos; }
+                item.pinX = (): number => {
+                    return -220 + pos;
+                };
                 item.smash();
             });
-            //shape.x = pos;
-            //shape.angle = pos;
-            //draw1(ctx, count);
-            //megadraw(ctx, count);
+        }
+    };
+
+    const page2 = new foPage({
+        opacity: 0.02,
+        color: 'yellow',
+        width: 1000,
+        height: 1000
+    });
+
+    const xxx = lang.SolutionXML.Document.Page;
+
+    const canvas2Params = {
+        width: 1100,
+        height: 1100,
+        title: 'Draw Json From Apprentice',
+        draw: (ctx: CanvasRenderingContext2D, count: number) => {
+            page2.render(ctx);
         }
     };
 
     return (
         <div>
-            <Canvas {...canvasParams} />
+            <Canvas {...canvas2Params} />
+            <Canvas {...canvas1Params} />
         </div>
     );
 };
