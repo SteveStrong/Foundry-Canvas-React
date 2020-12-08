@@ -4,7 +4,7 @@ import { cMargin } from './foGeometry2D';
 import { foObject } from './foObject.model';
 import { foGlyph2D } from './foGlyph2D.model';
 
-import { foShape2D } from './foShape2D.model';
+import { foShape2D, IfoShape2DProperties } from './foShape2D.model';
 
 import { foUnDo } from './foUnDo';
 
@@ -20,9 +20,17 @@ import { RuntimeType } from './foRuntimeType';
 // ctx.font = "bold 10pt Courier";
 // ctx.font = "italic bold 10pt Courier";
 
+export interface IfoText2DProperties extends IfoShape2DProperties {
+  text?: string;
+  fontSize?: number;
+  font?: string;
+
+  background?: string;
+}
+
 //a Shape is a graphic designed to behave like a visio shape
 //and have all the same properties
-export class foText2D extends foShape2D {
+export class foText2D extends foShape2D implements IfoText2DProperties {
   public text: string;
   public textAlign: string;
   public textBaseline: string;
@@ -48,7 +56,7 @@ export class foText2D extends foShape2D {
   }
 
   constructor(
-    properties?: any,
+    properties?: IfoText2DProperties,
     parent?: foObject
   ) {
     super(properties, parent);

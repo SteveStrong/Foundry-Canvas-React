@@ -10,20 +10,31 @@ import { Lifecycle } from './foLifecycle';
 
 import { foObject } from './foObject.model';
 
+export interface IfoGlyph2DProperties {
+  opacity?: number;
+  isSelected?: boolean;
+  color?: any;
+
+  x?: number;
+  y?: number;
+  width?: number;
+  height?: number; 
+  [propName: string]: any;
+}
 
 // a Glyph is a graphic designed to draw on a canvas in absolute coordinates
-export class foGlyph2D extends foObject {
+export class foGlyph2D extends foObject implements IfoGlyph2DProperties {
 
-  protected opacity: number = 1.0;
-  protected isSelected: boolean = true;
-  protected color: any;
+  public opacity: number = 1.0;
+  public isSelected: boolean = true;
+  public color: any;
 
   protected _x: number;
   protected _y: number;
   protected _width: number;
   protected _height: number;
 
-  constructor(properties?: any, parent?: foObject) {
+  constructor(properties?: IfoGlyph2DProperties, parent?: foObject) {
     super(properties, parent);
 
     this.override(properties);
@@ -61,8 +72,8 @@ export class foGlyph2D extends foObject {
   public rotationZ = (): number => {
     return 0;
   };
-  
-  public doubleClick: (keys:any) => void;
+
+  public doubleClick: (keys: any) => void;
 
   public openEditor: () => void;
   public closeEditor: () => void;
@@ -425,7 +436,7 @@ export class foGlyph2D extends foObject {
 
 
 
- 
+
 
 
   public afterRender = (
@@ -597,9 +608,9 @@ export class foGlyph2D extends foObject {
     ctx.stroke();
   }
 
- 
 
-  
+
+
   public drawSelected = (ctx: CanvasRenderingContext2D): void => {
     ctx.strokeStyle = 'red';
     ctx.lineWidth = 4;
@@ -691,7 +702,7 @@ export class foGlyph2D extends foObject {
   // }
 
   // 
-  
+
 
   // layoutMarginTop(resize: boolean = false, space: number = 0) {
   //   const loc = this.getLocation() as cPoint2D;

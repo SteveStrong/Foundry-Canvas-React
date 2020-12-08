@@ -34,19 +34,24 @@ export const App: FunctionComponent<any> = (props: any): ReactElement => {
         color: 'yellow',
         width: 800,
         height: 500,
-        marginX: 100
+        marginX: 100,
+        
     });
 
+    const shape1 = new foShape2D({ opacity:.3, isSelected:true,height:200, width:3});
+
         const shape = new foShape2D({
-            text: 'Hello World',
+            opacity: 3.0,
             width: 100,
             height: 50,
-            x:200,
-            y:300
+            x: 200,
+            y: 300
         });
     
-            const text = new foText2D({
+    const text = new foText2D({
+                isSelected: true,
                 text: 'Hello World',
+                angle: 25,
                 background: 'pink',
                 color: 'black',
                 width: 100,

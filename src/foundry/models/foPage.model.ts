@@ -9,6 +9,11 @@ import { WhereClause } from './foInterface';
 import { Matrix2D } from './foMatrix2D';
 import { foObject } from './foObject.model';
 
+interface foPageProperties {
+  marginX: number;
+  marginY: number;
+  showBoundry: boolean;
+}
 
 //a Shape is a graphic designed to behave like a visio shape
 //and have all the same properties
@@ -19,7 +24,7 @@ export class foPage extends foGlyph2D {
 
 
   constructor(
-    properties?: any,
+    properties?: foPageProperties | any,
     parent?: foObject
   ) {
     super(properties, parent);
