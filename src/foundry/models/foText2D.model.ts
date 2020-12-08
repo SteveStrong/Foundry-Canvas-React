@@ -153,8 +153,13 @@ export class foText2D extends foShape2D implements IfoText2DProperties {
   public drawTextBox(ctx: CanvasRenderingContext2D, text: string) {
     const left = (this.margin && this.margin.left) || 0;
     const top = (this.margin && this.margin.top) || 0;
-    let x = this.pinX() + left;
-    let y = this.pinY() + top;
+    
+    // let x = this.pinX() + left;
+    let x = this.width/2 +  left;
+
+    //let y = this.pinY() + top;
+    let y = this.height/2 + top;
+
     let dy = this.size + 4;
 
     let list = this.splitText(ctx, text, this.maxTextWidth());

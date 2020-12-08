@@ -9,11 +9,12 @@ import { Lifecycle } from './foLifecycle';
 
 
 import { foObject } from './foObject.model';
+import Color from 'color';
 
 export interface IfoGlyph2DProperties {
   opacity?: number;
   isSelected?: boolean;
-  color?: any;
+  color?: string;
 
   x?: number;
   y?: number;
@@ -26,7 +27,7 @@ export interface IfoGlyph2DProperties {
 export class foGlyph2D extends foObject implements IfoGlyph2DProperties {
 
   public opacity: number = 1.0;
-  public isSelected: boolean = true;
+  public isSelected: boolean = false;
   public color: any;
 
   protected _x: number;

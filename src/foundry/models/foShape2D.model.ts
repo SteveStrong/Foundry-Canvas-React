@@ -9,6 +9,7 @@ import { Matrix2D } from './foMatrix2D';
 import { foGlyph2D, IfoGlyph2DProperties } from './foGlyph2D.model';
 
 import { Lifecycle } from './foLifecycle';
+import { foCollection } from './foCollection.model';
 
 export enum shape2DNames {
   left = 'left',
@@ -34,7 +35,13 @@ export class foShape2D extends foGlyph2D implements IfoShape2DProperties {
     this._angle = value;
   }
 
-
+  protected _subcomponents: foCollection<foShape2D>;
+  get subcomponents(): foCollection<foShape2D> {
+    if (!this._subcomponents) {
+      this._subcomponents = new foCollection<foShape2D>()
+    }
+    return this._subcomponents;
+  }
 
   public pinX = (): number => 0.5 * this.width;
   public pinY = (): number => 0.5 * this.height;
@@ -199,10 +206,10 @@ export class foShape2D extends foGlyph2D implements IfoShape2DProperties {
 
     this.isSelected && this.drawSelected(ctx);
 
-    // deep &&
-    //   this._subcomponents.forEach(item => {
-    //     item.render(ctx, deep);
-    //   });
+    deep &&
+      this._subcomponents?.forEach(item => {
+        item.render(ctx, deep);
+      });
     ctx.restore();
   }
 

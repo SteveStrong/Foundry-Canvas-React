@@ -30,52 +30,60 @@ export const App: FunctionComponent<any> = (props: any): ReactElement => {
     };
 
     const page = new foPage({
-        text: 'Hello World',
         color: 'yellow',
-        width: 800,
-        height: 500,
-        marginX: 100,
-        
+        width: 1000,
+        height: 1000
     });
 
-    const shape1 = new foShape2D({ opacity:.3, isSelected:true,height:200, width:3});
+    const shape1 = new foShape2D({ opacity: 0.3, height: 200, width: 31 });
+    shape1.setPinRight().setPinBottom();
 
-        const shape = new foShape2D({
-            opacity: 3.0,
-            width: 100,
-            height: 50,
-            x: 200,
-            y: 300
+    const shape = new foShape2D({
+        color: 'blue',
+        opacity: 3.0,
+        width: 5,
+        height: 5,
+        x: page.width / 2,
+        y: page.height / 2
+    });
+
+    const list = '01,02,03,04,05,06,07,09,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28'.split(',');
+    const angle = 360 / list.length;
+    let i = 0;
+    list.forEach((item) => {
+        const text = new foText2D({
+            text: item,
+            fontSize: 30,
+            angle: angle * i,
+            background: 'tan',
+            color: 'black',
+            width: 75,
+            height: 50
         });
-    
-    const text = new foText2D({
-                isSelected: true,
-                text: 'Hello World',
-                angle: 25,
-                background: 'pink',
-                color: 'black',
-                width: 100,
-                height: 50,
-                x: 500,
-                y: 150
-            });
+        text.pinX = (): number => -220;
+        i++;
+        shape.subcomponents.addMember(text);
+    });
 
     const canvasParams = {
-        width: 1000,
-        height: 800,
+        width: 1100,
+        height: 1100,
         title: 'Render A model to the canvas',
         draw: (ctx: CanvasRenderingContext2D, count: number) => {
-            const pos = 600 * Math.sin(count * 0.05) ** 2;
-
+            const pos = 120 * Math.sin(count * 0.05) ** 2;
 
             page.render(ctx);
             shape.render(ctx);
-            text.render(ctx);
+
+            shape.subcomponents.forEach(item => {
+                item.angle += 1;
+                item.pinX = (): number => { return -220 + pos; }
+                item.smash();
+            });
             //shape.x = pos;
-             shape.angle = pos;
-            draw1(ctx, count);
-            megadraw(ctx, count);
-            return;
+            //shape.angle = pos;
+            //draw1(ctx, count);
+            //megadraw(ctx, count);
         }
     };
 
