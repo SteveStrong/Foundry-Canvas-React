@@ -2,29 +2,30 @@
 import { cPoint2D, cFrame } from './foGeometry2D';
 import { iPoint2D, Action } from './foInterface';
 
-import { foGlyph2D } from './foGlyph2D.model';
+import { foGlyph2D, IfoGlyph2DProperties } from './foGlyph2D.model';
 
 import { WhereClause } from './foInterface';
 
 import { Matrix2D } from './foMatrix2D';
 import { foObject } from './foObject.model';
+import { foShape2D, IfoShape2DProperties } from './foShape2D.model';
 
-interface foPageProperties {
-  marginX: number;
-  marginY: number;
-  showBoundry: boolean;
+export interface IfoPageProperties extends IfoShape2DProperties {
+  marginX?: number;
+  marginY?: number;
+  showBoundry?: boolean;
 }
 
 //a Shape is a graphic designed to behave like a visio shape
 //and have all the same properties
-export class foPage extends foGlyph2D {
+export class foPage extends foShape2D implements IfoPageProperties {
   gridSizeX: number = 50;
   gridSizeY: number = 50;
   showBoundry: boolean = true;
 
 
   constructor(
-    properties?: foPageProperties | any,
+    properties?: IfoPageProperties,
     parent?: foObject
   ) {
     super(properties, parent);

@@ -30,12 +30,13 @@ export const App: FunctionComponent<any> = (props: any): ReactElement => {
     };
 
     const page = new foPage({
-        color: 'yellow',
+        opacity: .02,
+        color: 'orange',
         width: 1000,
         height: 1000
     });
 
-    const shape1 = new foShape2D({ opacity: 0.3, height: 200, width: 31 });
+    const shape1 = new foShape2D({ opacity: 0.3, height: 200, width: 10 });
     shape1.setPinRight().setPinBottom();
 
     const shape = new foShape2D({
@@ -47,7 +48,7 @@ export const App: FunctionComponent<any> = (props: any): ReactElement => {
         y: page.height / 2
     });
 
-    const list = '01,02,03,04,05,06,07,09,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28'.split(',');
+    const list = '0,1,2,3,4,5,6,7,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26'.split(',');
     const angle = 360 / list.length;
     let i = 0;
     list.forEach((item) => {
@@ -57,12 +58,14 @@ export const App: FunctionComponent<any> = (props: any): ReactElement => {
             angle: angle * i,
             background: 'tan',
             color: 'black',
-            width: 75,
-            height: 50
+            width: 50,
+            height: 40
         });
         text.pinX = (): number => -220;
         i++;
         shape.subcomponents.addMember(text);
+
+        //text.subcomponents.addMember(shape1);
     });
 
     const canvasParams = {
