@@ -68,6 +68,9 @@ export const App: FunctionComponent<any> = (props: any): ReactElement => {
         //text.subcomponents.addMember(shape1);
     });
 
+    //page.setPinLeft();
+    //page.angle = 200;
+
     const canvasParams = {
         width: 1100,
         height: 1100,
@@ -76,6 +79,7 @@ export const App: FunctionComponent<any> = (props: any): ReactElement => {
             const pos = 120 * Math.sin(count * 0.05) ** 2;
 
             page.render(ctx);
+
             shape.render(ctx);
 
             shape.subcomponents.forEach(item => {
