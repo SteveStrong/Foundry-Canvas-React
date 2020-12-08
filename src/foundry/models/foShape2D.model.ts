@@ -6,9 +6,10 @@ import { iPoint2D, iFrame } from './foInterface';
 import { foObject } from './foObject.model';
 import { Matrix2D } from './foMatrix2D';
 
-import { foGlyph2D } from './foGlyph2D.model';
+import { foGlyph2D, IfoGlyph2DProperties } from './foGlyph2D.model';
 
 import { Lifecycle } from './foLifecycle';
+import { foCollection } from './foCollection.model';
 
 export enum shape2DNames {
   left = 'left',
@@ -18,9 +19,13 @@ export enum shape2DNames {
   center = 'center'
 }
 
+export interface IfoShape2DProperties extends  IfoGlyph2DProperties {
+  angle?: number;
+}
+
 //a Shape is a graphic designed to behave like a visio shape
 //and have all the same properties
-export class foShape2D extends foGlyph2D {
+export class foShape2D extends foGlyph2D implements IfoShape2DProperties {
   protected _angle: number;
   get angle(): number {
     return this._angle || 0.0;
@@ -30,7 +35,13 @@ export class foShape2D extends foGlyph2D {
     this._angle = value;
   }
 
-
+  protected _subcomponents: foCollection<foShape2D>;
+  get subcomponents(): foCollection<foShape2D> {
+    if (!this._subcomponents) {
+      this._subcomponents = new foCollection<foShape2D>()
+    }
+    return this._subcomponents;
+  }
 
   public pinX = (): number => 0.5 * this.width;
   public pinY = (): number => 0.5 * this.height;
@@ -80,7 +91,7 @@ export class foShape2D extends foGlyph2D {
   }
 
   constructor(
-    properties?: any,
+    properties?: IfoShape2DProperties,
     parent?: foObject
   ) {
     super(properties, parent);
@@ -195,10 +206,10 @@ export class foShape2D extends foGlyph2D {
 
     this.isSelected && this.drawSelected(ctx);
 
-    // deep &&
-    //   this._subcomponents.forEach(item => {
-    //     item.render(ctx, deep);
-    //   });
+    deep &&
+      this._subcomponents?.forEach(item => {
+        item.render(ctx, deep);
+      });
     ctx.restore();
   }
 

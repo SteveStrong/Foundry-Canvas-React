@@ -33,7 +33,7 @@ export class Matrix2D {
     public ty: number = 0; //Position (2, 1) in a 3x3 affine transformation matrix.
 
     constructor(matrix?: Matrix2D) {
-        if ( matrix) {
+        if (matrix) {
             this.copy(matrix)
         }
     }
@@ -43,7 +43,7 @@ export class Matrix2D {
         let b1 = this.b;
         let c1 = this.c;
         let d1 = this.d;
-        if (a != 1 || b != 0 || c != 0 || d != 1) {
+        if (a !== 1 || b !== 0 || c !== 0 || d !== 1) {
             this.a = a1 * a + c1 * b;
             this.b = b1 * a + d1 * b;
             this.c = a1 * c + c1 * d;
@@ -204,7 +204,7 @@ export class Matrix2D {
         return this;
     };
 
-    invertCopy(){
+    invertCopy() {
         let result = new Matrix2D(this);
         return result.invert();
     }
