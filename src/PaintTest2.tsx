@@ -6,7 +6,7 @@ import { foPage } from 'foundry/models/foPage.model';
 import { hub } from './models/hub';
 
 import React, { FunctionComponent, ReactElement } from 'react';
-import { LEDLight } from 'models/lights';
+import { LEDLight, LightArray } from 'models/lights';
 
 
 
@@ -26,10 +26,12 @@ export const PaintTest2: FunctionComponent<any> = (props: any): ReactElement => 
     });
 
 
-    const led1 = new LEDLight({
-        x: page2.width / 2,
+    const LEDArray = new LightArray({
+        x: 0,
         y: page2.height / 2
     });
+
+    LEDArray.components();
 
     const canvas2Params = {
         width: 1500,
@@ -38,7 +40,7 @@ export const PaintTest2: FunctionComponent<any> = (props: any): ReactElement => 
         draw: (ctx: CanvasRenderingContext2D, count: number) => {
             page2.render(ctx);
             shape2.render(ctx);
-            led1.render(ctx);
+            LEDArray.render(ctx);
         }
     };
 
