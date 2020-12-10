@@ -44,7 +44,7 @@ class hub extends foShape2D {
     }
 }
 
-export const App: FunctionComponent<any> = (props: any): ReactElement => {
+export const PaintTest2: FunctionComponent<any> = (props: any): ReactElement => {
     const page1 = new foPage({
         opacity: 0.02,
         color: 'orange',
@@ -155,4 +155,4 @@ export const App: FunctionComponent<any> = (props: any): ReactElement => {
     );
 };
 
-export default App;
+
