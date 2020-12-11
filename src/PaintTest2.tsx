@@ -14,10 +14,7 @@ import { ToJSON } from 'core/foRenderer';
 import { Tools } from 'foundry/models/foTools';
 import { ColorTranslator } from 'colortranslator';
 
-
-
 export const PaintTest2: FunctionComponent<any> = (props: any): ReactElement => {
-
     const page2 = new foPage({
         opacity: 0.02,
         color: 'white',
@@ -25,12 +22,10 @@ export const PaintTest2: FunctionComponent<any> = (props: any): ReactElement => 
         height: 500
     });
 
-
     const shape2 = new hub({
         x: page2.width / 2,
         y: page2.height / 2
     });
-
 
     const LEDArrayH = new LightArray({
         opacity: 0.1,
@@ -39,14 +34,14 @@ export const PaintTest2: FunctionComponent<any> = (props: any): ReactElement => 
     })
         .horizontal(LEDLight, { color: 'orange', opacity: 0.4 })
         .resetSize(20);
-    
+
     const mult = 5;
-     const blends = ColorTranslator.getBlendHEX('#FF00FF', '#FFFF00', mult + 10 * mult);
+    const blends = ColorTranslator.getBlendHEX('#FF00FF', '#FFFF00', mult + 10 * mult);
 
     const LEDArrayV = new LightArray({
         angle: 90,
         x: page2.width / 2,
-        y: page2.height * 2/3
+        y: (page2.height * 2) / 3
     })
         .vertical(LEDLight, { color: 'red', opacity: 0.4 })
         .resetSize(13);
@@ -56,7 +51,7 @@ export const PaintTest2: FunctionComponent<any> = (props: any): ReactElement => 
         x: page2.width / 2,
         y: page2.height / 3
     }).horizontal(LEDLight);
-    
+
     const canvas2Params = {
         width: 1500,
         height: 800,
@@ -67,11 +62,9 @@ export const PaintTest2: FunctionComponent<any> = (props: any): ReactElement => 
             LEDArrayH.render(ctx);
             LEDArrayV.render(ctx);
             ColorArrayV.render(ctx);
-            ColorArrayV.colorRoll();
+            ColorArrayV.colorRollDown();
         }
     };
-
-
 
     // const container = document.createElement('div');
     // const rows = 11;
@@ -91,7 +84,6 @@ export const PaintTest2: FunctionComponent<any> = (props: any): ReactElement => 
 
     // return container;
 
-
     return (
         <div>
             <Canvas {...canvas2Params} />
@@ -99,5 +91,3 @@ export const PaintTest2: FunctionComponent<any> = (props: any): ReactElement => 
         </div>
     );
 };
-
-

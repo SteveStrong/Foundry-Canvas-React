@@ -21,7 +21,9 @@ export const PaintTest3: FunctionComponent<any> = (props: any): ReactElement => 
         opacity: 0.02,
         color: 'white',
         width: 61 * source.width,
-        height: 10 * source.height
+        height: 10 * source.height,
+        gridSizeX: source.width,
+        gridSizeY: source.height
     });
 
     const lightPage = new foPage({
@@ -33,35 +35,16 @@ export const PaintTest3: FunctionComponent<any> = (props: any): ReactElement => 
         gridSizeY: source.height
     });
 
-    const shape2 = new hub({
-        x: timelinePage.width / 2,
-        y: timelinePage.height / 2
-    });
-
-    const LEDArrayH = new LightArray({
-        opacity: 0.1,
-        x: timelinePage.width / 2,
-        y: timelinePage.height / 2
-    })
-        .horizontal(LEDLight, { color: 'orange', opacity: 0.4 })
-        .resetSize(20);
-
     const mult = 5;
     const blends = ColorTranslator.getBlendHEX('#FF00FF', '#FFFF00', mult + 10 * mult);
 
-    const LEDArrayV = new LightArray({
-        angle: 90,
-        x: timelinePage.width / 2,
-        y: (timelinePage.height * 2) / 3
-    })
-        .vertical(LEDLight, { color: 'red', opacity: 0.4 })
-        .resetSize(13);
-
-    const ColorArrayV = new ColorArray({
-        colors: blends,
-        x: timelinePage.width / 2,
-        y: timelinePage.height / 3
-    }).horizontal(LEDLight);
+    const ColorArrayStamp = (row: number = 1) => {
+        return new ColorArray({
+            colors: blends,
+            x: timelinePage.width / 2,
+            y: source.height * row
+        }).horizontal(LEDLight);
+    };
 
     const timelineCanvasParams = {
         width: timelinePage.width,
@@ -72,17 +55,19 @@ export const PaintTest3: FunctionComponent<any> = (props: any): ReactElement => 
         }
     };
 
+    const ColorArrayV1 = ColorArrayStamp(1);
+    const ColorArrayV2 = ColorArrayStamp(2);
     const lightCanvasParams = {
         width: lightPage.width,
         height: lightPage.height,
         title: 'Light Canvas',
         draw: (ctx: CanvasRenderingContext2D, count: number) => {
             timelinePage.render(ctx);
-            shape2.render(ctx);
-            LEDArrayH.render(ctx);
-            LEDArrayV.render(ctx);
-            ColorArrayV.render(ctx);
-            ColorArrayV.colorRoll();
+
+            ColorArrayV1.render(ctx);
+            ColorArrayV1.colorRollDown();
+            ColorArrayV2.render(ctx);
+            ColorArrayV2.colorRollUp();
         }
     };
 
@@ -90,7 +75,7 @@ export const PaintTest3: FunctionComponent<any> = (props: any): ReactElement => 
         <div>
             <Canvas {...timelineCanvasParams} />
             <Canvas {...lightCanvasParams} />
-            <ToJSON {...Tools.asJson(ColorArrayV)} />
+            <ToJSON {...Tools.asJson(ColorArrayV1)} />
         </div>
     );
 };

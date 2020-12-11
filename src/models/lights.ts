@@ -30,12 +30,13 @@ export class LightArray<T extends LEDLight> extends foShape2D implements ILightA
     opacity: number = 0.2;
     total: number;
     private _rebuild: any;
- 
+
 
     constructor(properties?: ILightArray2DProperties, parent?: foObject) {
         super(properties, parent);
 
         this.override(properties);
+        this.setPinTop();
     }
 
     clear() {
@@ -87,13 +88,24 @@ export class LightArray<T extends LEDLight> extends foShape2D implements ILightA
         return this;
     }
 
-    colorRoll() {
+    colorRollDown() {
         const items = this.subcomponents.members
         const start = items[0].color;
-        for (let i = 1; i < this.total; i++){
+        for (let i = 1; i < this.total; i++) {
             items[i - 1].color = items[i].color;
         }
         items[this.total - 1].color = start;
+    }
+
+
+    colorRollUp() {
+        const items = this.subcomponents.members
+        const last = this.total - 1
+        const end = items[last].color;
+        for (let i = last; i > 0; i--) {
+            items[i].color = items[i - 1].color;
+        }
+        items[0].color = end;
     }
 }
 
@@ -117,7 +129,7 @@ export class ColorArray<T extends LEDLight> extends LightArray<T> implements ILi
     }
     vertical(c: { new(props?: IfoShape2DProperties): T }, props?: IfoShape2DProperties) {
         super.vertical(c, props);
-        for (let i = 0; i < this.total; i++){
+        for (let i = 0; i < this.total; i++) {
             const item = this.subcomponents.getMember(i);
             item.color = this.colors[i];
         }
