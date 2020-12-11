@@ -86,6 +86,15 @@ export class LightArray<T extends LEDLight> extends foShape2D implements ILightA
         }
         return this;
     }
+
+    colorRoll() {
+        const items = this.subcomponents.members
+        const start = items[0].color;
+        for (let i = 1; i < this.total; i++){
+            items[i - 1].color = items[i].color;
+        }
+        items[this.total - 1].color = start;
+    }
 }
 
 export class ColorArray<T extends LEDLight> extends LightArray<T> implements ILightArray2DProperties {

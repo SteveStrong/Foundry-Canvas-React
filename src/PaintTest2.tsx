@@ -67,6 +67,7 @@ export const PaintTest2: FunctionComponent<any> = (props: any): ReactElement => 
             LEDArrayH.render(ctx);
             LEDArrayV.render(ctx);
             ColorArrayV.render(ctx);
+            ColorArrayV.colorRoll();
         }
     };
 
