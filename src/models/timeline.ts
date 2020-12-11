@@ -5,7 +5,7 @@ import { foShape2D, IfoShape2DProperties } from "foundry/models/foShape2D.model"
 export class TimeStep extends foShape2D {
     color: string = 'blue';
     opacity: number = 0.3;
-    _width: number = 25;
+    _width: number = 10;
     _height: number = 50;
 
     constructor(properties?: IfoShape2DProperties, parent?: foObject) {

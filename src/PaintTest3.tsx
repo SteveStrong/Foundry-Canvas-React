@@ -13,26 +13,28 @@ import { ColorArray, LEDLight, LightArray } from 'models/lights';
 import { ToJSON } from 'core/foRenderer';
 import { Tools } from 'foundry/models/foTools';
 import { ColorTranslator } from 'colortranslator';
+import { TimeStep } from 'models/timeline';
 
 export const PaintTest3: FunctionComponent<any> = (props: any): ReactElement => {
-    const source = new LEDLight();
+    const sourceLED = new LEDLight();
+    const sourceStep = new TimeStep();
 
     const timelinePage = new foPage({
         opacity: 0.02,
         color: 'white',
-        width: 61 * source.width,
-        height: 10 * source.height,
-        gridSizeX: source.width,
-        gridSizeY: source.height
+        width: 160 * sourceStep.width,
+        height: 5 * sourceStep.height,
+        gridSizeX: sourceStep.width,
+        gridSizeY: sourceStep.height
     });
 
     const lightPage = new foPage({
         opacity: 0.02,
         color: 'white',
-        width: 61 * source.width,
-        height: 10 * source.height,
-        gridSizeX: source.width,
-        gridSizeY: source.height
+        width: 71 * sourceLED.width,
+        height: 10 * sourceLED.height,
+        gridSizeX: sourceLED.width,
+        gridSizeY: sourceLED.height
     });
 
     const mult = 5;
@@ -41,8 +43,8 @@ export const PaintTest3: FunctionComponent<any> = (props: any): ReactElement => 
     const ColorArrayStamp = (row: number = 1) => {
         return new ColorArray({
             colors: blends,
-            x: timelinePage.width / 2,
-            y: source.height * row
+            x: lightPage.width / 2,
+            y: sourceLED.height * row
         }).horizontal(LEDLight);
     };
 
@@ -62,7 +64,7 @@ export const PaintTest3: FunctionComponent<any> = (props: any): ReactElement => 
         height: lightPage.height,
         title: 'Light Canvas',
         draw: (ctx: CanvasRenderingContext2D, count: number) => {
-            timelinePage.render(ctx);
+            lightPage.render(ctx);
 
             ColorArrayV1.render(ctx);
             ColorArrayV1.colorRollDown();
