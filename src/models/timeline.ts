@@ -42,11 +42,11 @@ export class TimeLine<T extends TimeStep> extends foShape2D implements ITimeLine
         this._rebuild && this._rebuild();
         return this;
     }
-    horizontal(c: { new(props?: IfoShape2DProperties): T }, props?: IfoShape2DProperties) {
+    horizontal(childType: { new(props?: IfoShape2DProperties): T }, props?: IfoShape2DProperties) {
 
-        this._rebuild = () => { this.horizontal(c, props) };
+        this._rebuild = () => { this.horizontal(childType, props) };
         if (this.subcomponents.length !== this.total) {
-            const source = new c(props);
+            const source = new childType(props);
             this.width = source.width * this.total;
             this.height = source.height;
 
@@ -62,11 +62,11 @@ export class TimeLine<T extends TimeStep> extends foShape2D implements ITimeLine
         }
         return this;
     }
-    vertical(c: { new(props?: IfoShape2DProperties): T }, props?: IfoShape2DProperties) {
+    vertical(childType: { new(props?: IfoShape2DProperties): T }, props?: IfoShape2DProperties) {
 
-        this._rebuild = () => { this.vertical(c, props) };
+        this._rebuild = () => { this.vertical(childType, props) };
         if (this.subcomponents.length !== this.total) {
-            const source = new c(props);
+            const source = new childType(props);
             this.width = source.width;
             this.height = source.height * this.total;
 
