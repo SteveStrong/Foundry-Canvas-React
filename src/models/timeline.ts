@@ -15,7 +15,6 @@ export class TimeLinePage extends foPage {
 
     start() {
         setTimeout(() => { 
-            this.markAsDirty();
             this.incrementTimecode();
             this.start();
         }, this.timeDelay)
@@ -26,8 +25,9 @@ export class TimeLinePage extends foPage {
         this.markAsClean();
     }
 
-    addEffect(item: foShape2D): TimeLinePage {
+    addEffect(item: Effect<TimeStep>): TimeLinePage {
         this.subcomponents.addMember(item);
+        item.computeTimeBoundry(this.timeDelay)
         this.markAsDirty();
         return this;
     }
@@ -72,6 +72,11 @@ export class TimeLinePage extends foPage {
         if (this.timeCode > this.width / this.gridSizeX) {
             this.timeCode = 0;
         }
+        const absTime = this.timeDelay * this.timeCode;
+        this._subcomponents?.forEach(item  => {
+            const step = item as Effect<TimeStep>;
+            step.setTimecode(absTime, this.timeCode);
+        });
         return this.markAsDirty();
     }
 }
@@ -181,11 +186,19 @@ export class TimeLine<T extends TimeStep> extends foShape2D implements ITimeLine
 
 export class Effect<T extends TimeStep> extends TimeLine<T> implements ITimeLine2DProperties {
     timeCode: number = 0;
+    absTimeStart: number = 0; // ms
+    absTimeEnd: number = 0; // ms
 
     constructor(properties?: ITimeLine2DProperties, parent?: foObject) {
         super(properties, parent);
 
         this.override(properties);
+    }
+
+    computeTimeBoundry(deltaTime: number) {
+        const item = this.subcomponents.first();
+        this.absTimeStart = deltaTime * (this.x / item.width);
+        this.absTimeEnd = this.absTimeStart + deltaTime * (this.subcomponents.length)
     }
 
     setX(x: number) {
@@ -198,9 +211,29 @@ export class Effect<T extends TimeStep> extends TimeLine<T> implements ITimeLine
         return this;
     }
 
-    setTimecode(code: number) {
-        this.timeCode = code;
+    setTimecode(absTime: number, code: number) {
+        if (absTime >= this.absTimeStart && absTime <= this.absTimeEnd) {
+            this.timeCode = code;
+        } else {
+            this.timeCode = -1;
+        }
         return this;
+    }
+
+    
+    public draw = (ctx: CanvasRenderingContext2D): void => {
+        
+        ctx.save();
+        ctx.fillStyle = 'black';
+        ctx.globalAlpha = 1.0;
+
+        let x = this.width / 2;
+        let y = this.height - 10;
+        
+        ctx.font = '40px serif';
+        this.drawText(ctx, `${this.timeCode > 0 ? this.timeCode: '*' }`, x, y);
+ 
+        ctx.restore();
     }
 }
 
