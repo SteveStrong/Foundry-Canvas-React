@@ -13,7 +13,7 @@ import { ColorArray, LEDLight, LightArray } from 'models/lights';
 import { ToJSON } from 'core/foRenderer';
 import { Tools } from 'foundry/models/foTools';
 import { ColorTranslator } from 'colortranslator';
-import { TimeStep } from 'models/timeline';
+import { Effect, TimeStep } from 'models/timeline';
 
 export const PaintTest3: FunctionComponent<any> = (props: any): ReactElement => {
     const sourceLED = new LEDLight();
@@ -27,6 +27,31 @@ export const PaintTest3: FunctionComponent<any> = (props: any): ReactElement => 
         gridSizeX: sourceStep.width,
         gridSizeY: sourceStep.height
     });
+
+    const EffectStamp = (size: number = 20, row: number = 1, props?:any) => {
+        return new Effect({
+            total: size,
+            x: 0,
+            y: sourceStep.height * row
+        }).horizontal(TimeStep, props);
+    };
+
+    const Effect1 = EffectStamp(35, 1);
+    const Effect2 = EffectStamp(40, 2, {color: 'green'}).followEffect(Effect1);
+    const Effect3 = EffectStamp(40, 1, { color: 'yellow' }).followEffect(Effect2);
+   const Effect4 = EffectStamp(40, 3, { color: 'red' }).followEffect(Effect3);
+   const timelineCanvasParams = {
+        width: timelinePage.width,
+        height: timelinePage.height,
+        title: 'Timeline Canvas',
+        draw: (ctx: CanvasRenderingContext2D, count: number) => {
+            timelinePage.render(ctx);
+            Effect1.render(ctx);
+            Effect2.render(ctx);
+            Effect3.render(ctx);
+             Effect4.render(ctx);
+        }
+    };
 
     const lightPage = new foPage({
         opacity: 0.02,
@@ -46,15 +71,6 @@ export const PaintTest3: FunctionComponent<any> = (props: any): ReactElement => 
             x: lightPage.width / 2,
             y: sourceLED.height * row
         }).horizontal(LEDLight);
-    };
-
-    const timelineCanvasParams = {
-        width: timelinePage.width,
-        height: timelinePage.height,
-        title: 'Timeline Canvas',
-        draw: (ctx: CanvasRenderingContext2D, count: number) => {
-            timelinePage.render(ctx);
-        }
     };
 
     const ColorArrayV1 = ColorArrayStamp(1);

@@ -12,6 +12,7 @@ export class TimeStep extends foShape2D {
         super(properties, parent);
 
         this.override(properties);
+        this.setPinLeft().setPinTop();
     }
 }
 
@@ -31,7 +32,7 @@ export class TimeLine<T extends TimeStep> extends foShape2D implements ITimeLine
         super(properties, parent);
 
         this.override(properties);
-        this.setPinTop();
+        this.setPinLeft().setPinTop();
     }
 
     clear() {
@@ -53,8 +54,8 @@ export class TimeLine<T extends TimeStep> extends foShape2D implements ITimeLine
             for (let i = 0; i < this.total; i++) {
                 const led = new TimeStep({
                     index: i,
-                    x: i * (source.width) + (source.width / 2),
-                    y: (source.height / 2),
+                    x: i * (source.width),
+                    y: 0,
                     ...props,
                 });
                 this.subcomponents.addMember(led);
@@ -105,13 +106,21 @@ export class TimeLine<T extends TimeStep> extends foShape2D implements ITimeLine
 }
 
 export class Effect<T extends TimeStep> extends TimeLine<T> implements ITimeLine2DProperties {
-    colors: any[];
 
     constructor(properties?: ITimeLine2DProperties, parent?: foObject) {
         super(properties, parent);
 
         this.override(properties);
-        this.total = this.colors.length;
+    }
+
+    setX(x: number) {
+        this.x = x;
+        return this;
+    }
+
+    followEffect(source: Effect<T>) {
+        this.x = source.x + source.width;
+        return this;
     }
 }
 
