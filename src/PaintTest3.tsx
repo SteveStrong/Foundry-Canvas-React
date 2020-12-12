@@ -64,30 +64,49 @@ export const PaintTest3: FunctionComponent<any> = (props: any): ReactElement => 
         gridSizeY: sourceLED.height
     });
 
+    const LEDStringStamp = (size: number = 20, row: number = 1, props?: any) => {
+        return new LightArray({
+            total: size,
+            x: lightPage.width / 2,
+            y: sourceStep.height * row
+        }).horizontal(LEDLight, props);
+    };
+
     const mult = 5;
     const blends = ColorTranslator.getBlendHEX('#FF00FF', '#FFFF00', mult + 10 * mult);
 
-    const ColorArrayStamp = (row: number = 1) => {
+    const ColorArrayStamp = (colors: string[], row: number = 1, props?: any) => {
         return new ColorArray({
-            colors: blends,
+            colors: colors,
             x: lightPage.width / 2,
             y: sourceLED.height * row
         }).horizontal(LEDLight);
     };
 
-    const ColorArrayV1 = ColorArrayStamp(1);
-    const ColorArrayV2 = ColorArrayStamp(2);
+    const ColorArrayV1 = ColorArrayStamp(blends, 0);
+    const ColorArrayV2 = ColorArrayStamp(blends, 1);
+    lightPage.subcomponents.addMember(ColorArrayV1);
+    lightPage.subcomponents.addMember(ColorArrayV2);
+
+    const LEDString1 = LEDStringStamp(25, 3);
+    const LEDString2 = LEDStringStamp(25, 4);
+    const LEDString3 = LEDStringStamp(25, 5);
+    const LEDString4 = LEDStringStamp(25, 6);
+    const LEDString5 = LEDStringStamp(25, 7);
+    const LEDString6 = LEDStringStamp(25, 8);
+    lightPage.subcomponents.addMember(LEDString1);
+    lightPage.subcomponents.addMember(LEDString2);
+    lightPage.subcomponents.addMember(LEDString3);
+    lightPage.subcomponents.addMember(LEDString4);
+    lightPage.subcomponents.addMember(LEDString5);
+    lightPage.subcomponents.addMember(LEDString6);
+
     const lightCanvasParams = {
         width: lightPage.width,
         height: lightPage.height,
         title: 'Light Canvas',
         draw: (ctx: CanvasRenderingContext2D, count: number) => {
             lightPage.render(ctx);
-
-            ColorArrayV1.render(ctx);
-            ColorArrayV1.colorRollDown();
-            ColorArrayV2.render(ctx);
-            ColorArrayV2.colorRollUp();
         }
     };
 
