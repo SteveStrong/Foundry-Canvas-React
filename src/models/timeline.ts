@@ -4,6 +4,7 @@ import { foShape2D, IfoShape2DProperties } from "foundry/models/foShape2D.model"
 
 export class TimeLinePage extends foPage {
     timeCode: number = 0;
+    timeDelay: number = 100; // ms
 
     constructor(properties?: IfoShape2DProperties, parent?: foObject) {
         super(properties, parent);
@@ -11,6 +12,26 @@ export class TimeLinePage extends foPage {
         this.override(properties);
         this.setPinLeft().setPinTop();
     }
+
+    start() {
+        setTimeout(() => { 
+            this.markAsDirty();
+            this.incrementTimecode();
+            this.start();
+        }, this.timeDelay)
+        return this;
+    }
+
+    stop() {
+        this.markAsClean();
+    }
+
+    addEffect(item: foShape2D): TimeLinePage {
+        this.subcomponents.addMember(item);
+        this.markAsDirty();
+        return this;
+    }
+
     drawTimecode(ctx: CanvasRenderingContext2D) {
         ctx.save();
         ctx.beginPath();
@@ -51,7 +72,7 @@ export class TimeLinePage extends foPage {
         if (this.timeCode > this.width / this.gridSizeX) {
             this.timeCode = 0;
         }
-        return this;
+        return this.markAsDirty();
     }
 }
 
@@ -160,6 +181,7 @@ export class TimeLine<T extends TimeStep> extends foShape2D implements ITimeLine
 
 export class Effect<T extends TimeStep> extends TimeLine<T> implements ITimeLine2DProperties {
     timeCode: number = 0;
+
     constructor(properties?: ITimeLine2DProperties, parent?: foObject) {
         super(properties, parent);
 

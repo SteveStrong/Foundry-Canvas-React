@@ -12,7 +12,8 @@ import { Tools } from 'foundry/models/foTools';
 import { ColorTranslator } from 'colortranslator';
 import { Effect, TimeLinePage, TimeStep } from 'models/timeline';
 
-export const PaintTest3: FunctionComponent<any> = (): ReactElement => {
+export const PaintTest4: FunctionComponent<any> = (): ReactElement => {
+
     const sourceLED = new LEDLight();
     const sourceStep = new TimeStep();
 
@@ -38,19 +39,20 @@ export const PaintTest3: FunctionComponent<any> = (): ReactElement => {
     const Effect3 = EffectStamp(40, 1, { color: 'yellow' }).followEffect(Effect2);
     const Effect4 = EffectStamp(40, 3, { color: 'red'}).followEffect(Effect3);
 
-    timelinePage.subcomponents.addMember(Effect1);
-    timelinePage.subcomponents.addMember(Effect2);
-    timelinePage.subcomponents.addMember(Effect3);
-    timelinePage.subcomponents.addMember(Effect4);
+    timelinePage.addEffect(Effect1);
+    timelinePage.addEffect(Effect2);
+    timelinePage.addEffect(Effect3);
+    timelinePage.addEffect(Effect4);
     const timelineCanvasParams = {
         width: timelinePage.width,
         height: timelinePage.height,
-        title: 'Timeline Canvas',
+        title: 'Timeline Canvas should draw and wait for change',
         draw: (ctx: CanvasRenderingContext2D) => {
-            timelinePage.render(ctx);
-            timelinePage.incrementTimecode();
+            timelinePage.isDirty && timelinePage.render(ctx);
         }
     };
+
+    timelinePage.start();
 
     const lightPage = new LightDesignPage({
         opacity: 0.02,
@@ -103,7 +105,7 @@ export const PaintTest3: FunctionComponent<any> = (): ReactElement => {
         height: lightPage.height,
         title: 'Light Canvas',
         draw: (ctx: CanvasRenderingContext2D) => {
-            lightPage.render(ctx);
+            lightPage.isDirty && lightPage.render(ctx);
         }
     };
 
@@ -111,7 +113,6 @@ export const PaintTest3: FunctionComponent<any> = (): ReactElement => {
         <div>
             <Canvas {...timelineCanvasParams} />
             <Canvas {...lightCanvasParams} />
-            <ToJSON {...Tools.asJson(ColorArrayV1)} />
         </div>
     );
 };
