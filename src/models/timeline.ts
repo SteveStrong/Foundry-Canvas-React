@@ -105,7 +105,7 @@ export class TimeLine<T extends TimeStep> extends foShape2D implements ITimeLine
             this.height = source.height;
 
             for (let i = 0; i < this.total; i++) {
-                const led = new TimeStep({
+                const led = new childType({
                     index: i,
                     x: i * (source.width),
                     y: 0,
@@ -159,7 +159,7 @@ export class TimeLine<T extends TimeStep> extends foShape2D implements ITimeLine
 }
 
 export class Effect<T extends TimeStep> extends TimeLine<T> implements ITimeLine2DProperties {
-
+    timeCode: number = 0;
     constructor(properties?: ITimeLine2DProperties, parent?: foObject) {
         super(properties, parent);
 
@@ -173,6 +173,11 @@ export class Effect<T extends TimeStep> extends TimeLine<T> implements ITimeLine
 
     followEffect(source: Effect<T>) {
         this.x = source.x + source.width;
+        return this;
+    }
+
+    setTimecode(code: number) {
+        this.timeCode = code;
         return this;
     }
 }
