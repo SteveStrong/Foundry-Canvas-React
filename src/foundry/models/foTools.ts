@@ -69,7 +69,7 @@ export class foTools {
       }
       return value;
     }
-    function resolveCircular(key, value) {
+    function resolveCircular(key:string, value:any) {
       switch (key) {
         case 'myParent':
           return resolveReference(value);
@@ -79,6 +79,8 @@ export class foTools {
                 return resolveReference(item);
               })
             : value;
+        case '_subcomponents':
+          return value;
         case '_lookup':
           return value;
         case '_members':

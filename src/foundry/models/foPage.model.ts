@@ -75,26 +75,6 @@ export class foPage extends foShape2D implements IfoPageProperties {
  
 
 
-  // getMatrix() {
-  //   if (this._matrix === undefined) {
-  //     this._matrix = new Matrix2D();
-  //     this._matrix.appendTransform(
-  //       this.marginX + this.x,
-  //       this.marginY + this.y,
-  //       this.scaleX,
-  //       this.scaleY,
-  //       this.rotationZ(),
-  //       0,
-  //       0,
-  //       this.pinX(),
-  //       this.pinY()
-  //     );
-  //   }
-  //   return this._matrix;
-  // }
-
- 
-
 
   zoomBy(zoom: number) {
     this.scaleX *= zoom;
@@ -216,7 +196,7 @@ export class foPage extends foShape2D implements IfoPageProperties {
 
 
 
-  public render(ctx: CanvasRenderingContext2D, deep: boolean = true) {
+  public render(ctx: CanvasRenderingContext2D, deep: boolean = true): foPage {
     ctx.clearRect(0, 0, this.width, this.height);
 
     ctx.save();
@@ -228,13 +208,14 @@ export class foPage extends foShape2D implements IfoPageProperties {
     //this.drawHover && this.drawHover(ctx);
     this.postDraw && this.postDraw(ctx);
 
-    // deep &&
-    //   this._subcomponents.forEach(item => {
-    //     item.render(ctx, deep);
-    //   });
+    deep &&
+      this._subcomponents?.forEach(item => {
+        item.render(ctx, deep);
+      });
     ctx.restore();
 
     this.showBoundry && this.afterRender(ctx);
+    return this;
   }
 
   public preDraw = (ctx: CanvasRenderingContext2D): void => {

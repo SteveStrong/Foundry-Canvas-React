@@ -1,13 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './App';
+
+import { PaintTest2 } from 'PaintTest2';
+import { PaintTest3 } from 'PaintTest3';
 
 
 ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById('root')
+    <React.StrictMode>
+        <PaintTest3 />
+    </React.StrictMode>,
+    document.getElementById('root')
 );
 
 

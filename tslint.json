@@ -17,7 +17,7 @@
                 "order": ["static-field", "instance-field", "static-method", "instance-method"]
             }
         ],
-        
+
         "no-arg": true,
         "no-bitwise": true,
         "no-console": [true, "debug", "info", "time", "timeEnd", "trace"],
@@ -27,6 +27,7 @@
         "no-empty": false,
         "no-empty-interface": true,
         "no-eval": true,
+        "no-unused-variable": false,
         "no-inferrable-types": [true, "ignore-params"],
         "no-misused-new": true,
         "no-non-null-assertion": true,

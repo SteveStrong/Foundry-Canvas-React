@@ -11,7 +11,7 @@ export const Canvas: FunctionComponent<any> = (props: any): ReactElement => {
         <Fragment>
             <h1>{props.title}</h1>
             <canvas ref={canvasRef} {...rest} />
-            <ToJSON {...props} />
+            {/* <ToJSON {...props} /> */}
         </Fragment>
     );
 };
