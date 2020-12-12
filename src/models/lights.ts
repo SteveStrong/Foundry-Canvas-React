@@ -1,6 +1,7 @@
 import { foObject } from "foundry/models/foObject.model";
 import { foPage } from "foundry/models/foPage.model";
 import { foShape2D, IfoShape2DProperties } from "foundry/models/foShape2D.model";
+import { rxPubSub } from "./rxPubSub";
 
 // function create<T>(c: { new(): T }): T {
 //     return new c();
@@ -17,6 +18,22 @@ export class LightDesignPage extends foPage {
 
         this.override(properties);
         this.setPinLeft().setPinTop();
+
+        rxPubSub.hub$().subscribe(item => {
+            if (item.data && item.data?.color) {
+                this.markAsDirty();
+                //console.log(item.data.color)
+                this.subcomponents.forEach(child => {
+                    child.color = item.data.color;
+                })
+            }
+        })
+    }
+
+    addLightArray(item: LightArray<LEDLight>): LightDesignPage {
+        this.subcomponents.addMember(item);
+        this.markAsDirty();
+        return this;
     }
 }
 
@@ -50,6 +67,8 @@ export class LightArray<T extends LEDLight> extends foShape2D implements ILightA
 
         this.override(properties);
         this.setPinTop();
+
+
     }
 
     clear() {

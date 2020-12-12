@@ -84,8 +84,8 @@ export const PaintTest4: FunctionComponent<any> = (): ReactElement => {
 
     const ColorArrayV1 = ColorArrayStamp(blends, 0);
     const ColorArrayV2 = ColorArrayStamp(blends, 1);
-    lightPage.subcomponents.addMember(ColorArrayV1);
-    lightPage.subcomponents.addMember(ColorArrayV2);
+   // lightPage.addLightArray(ColorArrayV1);
+   // lightPage.addLightArray(ColorArrayV2);
 
     const LEDString1 = LEDStringStamp(25, 3);
     const LEDString2 = LEDStringStamp(25, 4);
@@ -93,12 +93,13 @@ export const PaintTest4: FunctionComponent<any> = (): ReactElement => {
     const LEDString4 = LEDStringStamp(25, 6);
     const LEDString5 = LEDStringStamp(25, 7);
     const LEDString6 = LEDStringStamp(25, 8);
-    lightPage.subcomponents.addMember(LEDString1);
-    lightPage.subcomponents.addMember(LEDString2);
-    lightPage.subcomponents.addMember(LEDString3);
-    lightPage.subcomponents.addMember(LEDString4);
-    lightPage.subcomponents.addMember(LEDString5);
-    lightPage.subcomponents.addMember(LEDString6);
+    
+    lightPage.addLightArray(LEDString1);
+    lightPage.addLightArray(LEDString2);
+    lightPage.addLightArray(LEDString3);
+    lightPage.addLightArray(LEDString4);
+    lightPage.addLightArray(LEDString5);
+    lightPage.addLightArray(LEDString6);
 
     const lightCanvasParams = {
         width: lightPage.width,
@@ -111,6 +112,7 @@ export const PaintTest4: FunctionComponent<any> = (): ReactElement => {
 
     return (
         <div>
+            <ToJSON {...timelinePage.activeStep} />
             <Canvas {...timelineCanvasParams} />
             <Canvas {...lightCanvasParams} />
         </div>

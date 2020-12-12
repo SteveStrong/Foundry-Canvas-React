@@ -1,10 +1,12 @@
 import { foObject } from "foundry/models/foObject.model";
 import { foPage } from "foundry/models/foPage.model";
 import { foShape2D, IfoShape2DProperties } from "foundry/models/foShape2D.model";
+import { rxPubSub } from "./rxPubSub";
 
 export class TimeLinePage extends foPage {
     timeCode: number = 0;
-    timeDelay: number = 100; // ms
+    timeDelay: number = 10; // ms
+    activeStep: TimeStep;
 
     constructor(properties?: IfoShape2DProperties, parent?: foObject) {
         super(properties, parent);
@@ -77,6 +79,18 @@ export class TimeLinePage extends foPage {
             const step = item as Effect<TimeStep>;
             step.setTimecode(absTime, this.timeCode);
         });
+
+        this._subcomponents?.forEach(item => {
+            const step = item as Effect<TimeStep>;
+            this.activeStep = step.activeStep;
+            if (step.activeStep != null) {    
+                //console.log( step.activeStep.color)
+                rxPubSub.broadcast({
+                    groupId: 0,
+                    data: step.activeStep
+                })
+            }
+        })
         return this.markAsDirty();
     }
 }
@@ -187,7 +201,9 @@ export class TimeLine<T extends TimeStep> extends foShape2D implements ITimeLine
 export class Effect<T extends TimeStep> extends TimeLine<T> implements ITimeLine2DProperties {
     timeCode: number = 0;
     absTimeStart: number = 0; // ms
+    absTimeSpan: number = 0; // ms
     absTimeEnd: number = 0; // ms
+    activeStep: T;
 
     constructor(properties?: ITimeLine2DProperties, parent?: foObject) {
         super(properties, parent);
@@ -198,7 +214,18 @@ export class Effect<T extends TimeStep> extends TimeLine<T> implements ITimeLine
     computeTimeBoundry(deltaTime: number) {
         const item = this.subcomponents.first();
         this.absTimeStart = deltaTime * (this.x / item.width);
-        this.absTimeEnd = this.absTimeStart + deltaTime * (this.subcomponents.length)
+        this.absTimeSpan = deltaTime * this.subcomponents.length;
+        this.absTimeEnd = this.absTimeStart + this.absTimeSpan;
+    }
+
+    computeActiveStep(absTime: number): T {
+        const members = this.subcomponents.members;
+        const deltaTime = this.absTimeSpan / members.length;
+        const localTime = absTime - this.absTimeStart;
+        const step = localTime / deltaTime;
+        const item = members[step-1];
+        this.activeStep = item as T;
+        return this.activeStep;
     }
 
     setX(x: number) {
@@ -214,8 +241,10 @@ export class Effect<T extends TimeStep> extends TimeLine<T> implements ITimeLine
     setTimecode(absTime: number, code: number) {
         if (absTime >= this.absTimeStart && absTime <= this.absTimeEnd) {
             this.timeCode = code;
+            this.computeActiveStep(absTime);
         } else {
             this.timeCode = -1;
+            this.activeStep = undefined;
         }
         return this;
     }
@@ -231,7 +260,7 @@ export class Effect<T extends TimeStep> extends TimeLine<T> implements ITimeLine
         let y = this.height - 10;
         
         ctx.font = '40px serif';
-        this.drawText(ctx, `${this.timeCode > 0 ? this.timeCode: '*' }`, x, y);
+        this.drawText(ctx, `${this.activeStep ? this.timeCode: '*' }`, x, y);
  
         ctx.restore();
     }
