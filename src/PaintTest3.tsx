@@ -9,17 +9,17 @@ import { foPage } from 'foundry/models/foPage.model';
 import { hub } from './models/hub';
 
 import React, { FunctionComponent, ReactElement } from 'react';
-import { ColorArray, LEDLight, LightArray } from 'models/lights';
+import { ColorArray, LEDLight, LightArray, LightDesignPage } from 'models/lights';
 import { ToJSON } from 'core/foRenderer';
 import { Tools } from 'foundry/models/foTools';
 import { ColorTranslator } from 'colortranslator';
-import { Effect, TimeStep } from 'models/timeline';
+import { Effect, TimeLinePage, TimeStep } from 'models/timeline';
 
 export const PaintTest3: FunctionComponent<any> = (props: any): ReactElement => {
     const sourceLED = new LEDLight();
     const sourceStep = new TimeStep();
 
-    const timelinePage = new foPage({
+    const timelinePage = new TimeLinePage({
         opacity: 0.02,
         color: 'white',
         width: 160 * sourceStep.width,
@@ -28,7 +28,7 @@ export const PaintTest3: FunctionComponent<any> = (props: any): ReactElement => 
         gridSizeY: sourceStep.height
     });
 
-    const EffectStamp = (size: number = 20, row: number = 1, props?:any) => {
+    const EffectStamp = (size: number = 20, row: number = 1, props?: any) => {
         return new Effect({
             total: size,
             x: 0,
@@ -37,23 +37,25 @@ export const PaintTest3: FunctionComponent<any> = (props: any): ReactElement => 
     };
 
     const Effect1 = EffectStamp(35, 1);
-    const Effect2 = EffectStamp(40, 2, {color: 'green'}).followEffect(Effect1);
+    const Effect2 = EffectStamp(40, 2, { color: 'green' }).followEffect(Effect1);
     const Effect3 = EffectStamp(40, 1, { color: 'yellow' }).followEffect(Effect2);
-   const Effect4 = EffectStamp(40, 3, { color: 'red' }).followEffect(Effect3);
-   const timelineCanvasParams = {
+    const Effect4 = EffectStamp(40, 3, { color: 'red' }).followEffect(Effect3);
+
+    timelinePage.subcomponents.addMember(Effect1);
+    timelinePage.subcomponents.addMember(Effect2);
+    timelinePage.subcomponents.addMember(Effect3);
+    timelinePage.subcomponents.addMember(Effect4);
+    const timelineCanvasParams = {
         width: timelinePage.width,
         height: timelinePage.height,
         title: 'Timeline Canvas',
         draw: (ctx: CanvasRenderingContext2D, count: number) => {
             timelinePage.render(ctx);
-            Effect1.render(ctx);
-            Effect2.render(ctx);
-            Effect3.render(ctx);
-             Effect4.render(ctx);
+            timelinePage.incrementTimecode();
         }
     };
 
-    const lightPage = new foPage({
+    const lightPage = new LightDesignPage({
         opacity: 0.02,
         color: 'white',
         width: 71 * sourceLED.width,

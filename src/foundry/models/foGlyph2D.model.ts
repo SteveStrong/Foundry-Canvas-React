@@ -456,7 +456,7 @@ export class foGlyph2D extends foObject implements IfoGlyph2DProperties {
     //   });
   };
 
-  public render(ctx: CanvasRenderingContext2D, deep: boolean = true) {
+  public render(ctx: CanvasRenderingContext2D, deep: boolean = true): foGlyph2D {
     if (this.isInvisible) return;
     ctx.save();
 
@@ -477,6 +477,7 @@ export class foGlyph2D extends foObject implements IfoGlyph2DProperties {
     //   });
 
     ctx.restore();
+    return this;
   }
 
   public drawFont(

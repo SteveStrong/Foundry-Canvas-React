@@ -22,7 +22,7 @@ export function useCanvas2D(draw: (arg0: CanvasRenderingContext2D, arg1: number)
         clear(context);
         border(context);
         draw(context, animationFrameId);
-        animationFrameId = window.requestAnimationFrame(render);
+       animationFrameId = window.requestAnimationFrame(render);
       };
       render();
     }

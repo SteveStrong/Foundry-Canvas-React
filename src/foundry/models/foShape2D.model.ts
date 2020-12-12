@@ -191,7 +191,7 @@ export class foShape2D extends foGlyph2D implements IfoShape2DProperties {
 
 
 
-  public render(ctx: CanvasRenderingContext2D, deep: boolean = true) {
+  public render(ctx: CanvasRenderingContext2D, deep: boolean = true): foShape2D {
     if (this.isInvisible) return;
     ctx.save();
 
@@ -211,6 +211,7 @@ export class foShape2D extends foGlyph2D implements IfoShape2DProperties {
         item.render(ctx, deep);
       });
     ctx.restore();
+    return this;
   }
 
   public drawOutline(ctx: CanvasRenderingContext2D) {

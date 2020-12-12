@@ -1,6 +1,59 @@
 import { foObject } from "foundry/models/foObject.model";
+import { foPage } from "foundry/models/foPage.model";
 import { foShape2D, IfoShape2DProperties } from "foundry/models/foShape2D.model";
 
+export class TimeLinePage extends foPage {
+    timeCode: number = 0;
+
+    constructor(properties?: IfoShape2DProperties, parent?: foObject) {
+        super(properties, parent);
+
+        this.override(properties);
+        this.setPinLeft().setPinTop();
+    }
+    drawTimecode(ctx: CanvasRenderingContext2D) {
+        ctx.save();
+        ctx.beginPath();
+
+
+        ctx.strokeStyle = 'black';
+        ctx.lineWidth = 10;
+
+        const left = this.marginX - this.x;
+        const top = this.marginY - this.y;
+        const width = this.width / this.scaleX;
+        const height = this.height / this.scaleY;
+        const bottom = top + height;
+
+
+        //draw vertical...
+        let x = this.gridSizeX * this.timeCode;
+        ctx.moveTo(x, top);
+        ctx.lineTo(x, bottom);
+
+        ctx.stroke();
+        ctx.restore();
+    }
+
+    public draw = (ctx: CanvasRenderingContext2D): void => {
+        this.drawGrid(ctx);
+        //this.drawPage(ctx);
+        this.drawTimecode(ctx);
+    }
+
+    setTimecode(code:number) {
+        this.timeCode = code - 1;;
+        return this.incrementTimecode();
+    }
+
+    incrementTimecode() {
+        this.timeCode++;
+        if (this.timeCode > this.width / this.gridSizeX) {
+            this.timeCode = 0;
+        }
+        return this;
+    }
+}
 
 export class TimeStep extends foShape2D {
     color: string = 'blue';

@@ -1,4 +1,5 @@
 import { foObject } from "foundry/models/foObject.model";
+import { foPage } from "foundry/models/foPage.model";
 import { foShape2D, IfoShape2DProperties } from "foundry/models/foShape2D.model";
 
 // function create<T>(c: { new(): T }): T {
@@ -6,6 +7,18 @@ import { foShape2D, IfoShape2DProperties } from "foundry/models/foShape2D.model"
 // }
 
 export type Newable<T> = { new(...args: any[]): T; };
+
+
+export class LightDesignPage extends foPage {
+    timeCode: number = 0;
+
+    constructor(properties?: IfoShape2DProperties, parent?: foObject) {
+        super(properties, parent);
+
+        this.override(properties);
+        this.setPinLeft().setPinTop();
+    }
+}
 
 export class LEDLight extends foShape2D {
     color: string = 'blue';
