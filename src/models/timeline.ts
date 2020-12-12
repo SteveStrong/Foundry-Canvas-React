@@ -104,3 +104,14 @@ export class TimeLine<T extends TimeStep> extends foShape2D implements ITimeLine
     }
 }
 
+export class Effect<T extends TimeStep> extends TimeLine<T> implements ITimeLine2DProperties {
+    colors: any[];
+
+    constructor(properties?: ITimeLine2DProperties, parent?: foObject) {
+        super(properties, parent);
+
+        this.override(properties);
+        this.total = this.colors.length;
+    }
+}
+
