@@ -1,12 +1,7 @@
 
-import { cPoint2D, cFrame } from './foGeometry2D';
-import { iPoint2D, Action } from './foInterface';
 
-import { foGlyph2D, IfoGlyph2DProperties } from './foGlyph2D.model';
 
-import { WhereClause } from './foInterface';
 
-import { Matrix2D } from './foMatrix2D';
 import { foObject } from './foObject.model';
 import { foShape2D, IfoShape2DProperties } from './foShape2D.model';
 

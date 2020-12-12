@@ -4,9 +4,6 @@
 // https://elchininet.github.io/ColorTranslator/
 
 import { Canvas } from 'Canvas';
-import { foObject } from 'foundry/models/foObject.model';
-import { foPage } from 'foundry/models/foPage.model';
-import { hub } from './models/hub';
 
 import React, { FunctionComponent, ReactElement } from 'react';
 import { ColorArray, LEDLight, LightArray, LightDesignPage } from 'models/lights';
@@ -15,7 +12,7 @@ import { Tools } from 'foundry/models/foTools';
 import { ColorTranslator } from 'colortranslator';
 import { Effect, TimeLinePage, TimeStep } from 'models/timeline';
 
-export const PaintTest3: FunctionComponent<any> = (props: any): ReactElement => {
+export const PaintTest3: FunctionComponent<any> = (): ReactElement => {
     const sourceLED = new LEDLight();
     const sourceStep = new TimeStep();
 
@@ -49,7 +46,7 @@ export const PaintTest3: FunctionComponent<any> = (props: any): ReactElement => 
         width: timelinePage.width,
         height: timelinePage.height,
         title: 'Timeline Canvas',
-        draw: (ctx: CanvasRenderingContext2D, count: number) => {
+        draw: (ctx: CanvasRenderingContext2D) => {
             timelinePage.render(ctx);
             timelinePage.incrementTimecode();
         }
@@ -75,7 +72,7 @@ export const PaintTest3: FunctionComponent<any> = (props: any): ReactElement => 
     const mult = 5;
     const blends = ColorTranslator.getBlendHEX('#FF00FF', '#FFFF00', mult + 10 * mult);
 
-    const ColorArrayStamp = (colors: string[], row: number = 1, props?: any) => {
+    const ColorArrayStamp = (colors: string[], row: number = 1) => {
         return new ColorArray({
             colors: colors,
             x: lightPage.width / 2,
@@ -105,7 +102,7 @@ export const PaintTest3: FunctionComponent<any> = (props: any): ReactElement => 
         width: lightPage.width,
         height: lightPage.height,
         title: 'Light Canvas',
-        draw: (ctx: CanvasRenderingContext2D, count: number) => {
+        draw: (ctx: CanvasRenderingContext2D) => {
             lightPage.render(ctx);
         }
     };

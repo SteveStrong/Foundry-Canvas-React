@@ -1,6 +1,5 @@
 import { Tools } from './foTools';
-import { cPoint2D } from './foGeometry2D';
-import { Vector2, Vector3 } from 'three';
+import { Vector3 } from 'three';
 import { iPoint2D, iFrame } from './foInterface';
 
 import { foObject } from './foObject.model';
