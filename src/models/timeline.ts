@@ -6,7 +6,7 @@ import { rxPubSub } from "./rxPubSub";
 
 export class TimeLinePage extends foPage {
     timeCode: number = 0;
-    timeDelay: number = 100; // ms
+    timeDelay: number = 10; // ms
     activeStep: TimeStep;
     _timer: any = undefined;
 
@@ -20,7 +20,7 @@ export class TimeLinePage extends foPage {
     start() {
         this._timer && clearTimeout(this._timer);
         this._timer = setTimeout(() => {
-           // console.log(this._timer, 'setTimeout');
+            // console.log(this._timer, 'setTimeout');
             if (!!(this._timer && !(this._timer % 2))) {
                 this.incrementTimecode();
             }
@@ -94,7 +94,7 @@ export class TimeLinePage extends foPage {
             if (step.activeStep != null) {
                 //console.log(step.activeStep.color, this.timeCode, this._subcomponents.length)
                 rxPubSub.broadcast({
-                    groupId: 0,
+                    groupId: item['groupId'],
                     data: step.activeStep
                 })
             }
@@ -121,11 +121,13 @@ export class TimeStep extends foShape2D {
 
 export interface ITimeLine2DProperties extends IfoShape2DProperties {
     total?: number;
+    groupId?: number;
 }
 
 export class TimeLine<T extends TimeStep> extends foShape2D implements ITimeLine2DProperties {
-    opacity: number = 0.2;
+    opacity: number = 1.0;
     total: number;
+    groupId: number;
     private _rebuild: any;
 
 

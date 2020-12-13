@@ -23,13 +23,15 @@ export class LightDesignPage extends foPage {
         this.setPinLeft().setPinTop();
 
         rxPubSub.hub$().subscribe(item => {
-            if (item.data && item.data?.color) {
+            if (item.data && item.data) {
                 this.currentEffect = item.data;
                 this.markAsDirty();
-                //console.log(item.data.color)
+                console.log(item)
                 this.subcomponents.forEach(child => {
                     const lights = child as LightArray<LEDLight>;
-                    lights.applyEffect(this.currentEffect);
+                    if (lights.groupId === item.groupId) {
+                        lights.applyEffect(this.currentEffect);
+                    }
                 })
             }
         })
@@ -48,13 +50,11 @@ export class LightDesignPage extends foPage {
             ctx.save();
 
             ctx.fillStyle = this.currentEffect.color;
-            ctx.fillRect(0, 0, this.width, this.gridSizeY);
+            ctx.fillRect(0, 0, this.width, this.gridSizeY/3);
 
             ctx.restore();   
         }
- 
-
-
+        //console.log(performance.now())
         return this.markAsClean();
     }
 }
@@ -76,11 +76,13 @@ export class LEDLight extends foShape2D {
 
 export interface ILightArray2DProperties extends IfoShape2DProperties {
     total?: number;
+    groupId?: number;
 }
 
 export class LightArray<T extends LEDLight> extends foShape2D implements ILightArray2DProperties {
     opacity: number = 0.2;
     total: number;
+    groupId: number;
     private _rebuild: any;
 
 
