@@ -1,6 +1,8 @@
 import { foObject } from "foundry/models/foObject.model";
 import { foPage } from "foundry/models/foPage.model";
 import { foShape2D, IfoShape2DProperties } from "foundry/models/foShape2D.model";
+import { EffectStep } from "./effect";
+import { rxPubSub } from "./rxPubSub";
 
 // function create<T>(c: { new(): T }): T {
 //     return new c();
@@ -11,12 +13,49 @@ export type Newable<T> = { new(...args: any[]): T; };
 
 export class LightDesignPage extends foPage {
     timeCode: number = 0;
+    currentEffect: EffectStep;
+
 
     constructor(properties?: IfoShape2DProperties, parent?: foObject) {
         super(properties, parent);
 
         this.override(properties);
         this.setPinLeft().setPinTop();
+
+        rxPubSub.hub$().subscribe(item => {
+            if (item.data && item.data) {
+                this.currentEffect = item.data;
+                this.markAsDirty();
+                console.log(item)
+                this.subcomponents.forEach(child => {
+                    const lights = child as LightArray<LEDLight>;
+                    if (lights.groupId === item.groupId) {
+                        lights.applyEffect(this.currentEffect);
+                    }
+                })
+            }
+        })
+    }
+
+    addLightArray(item: LightArray<LEDLight>): LightDesignPage {
+        this.subcomponents.addMember(item);
+        this.markAsDirty();
+        return this;
+    }
+
+    public render(ctx: CanvasRenderingContext2D, deep: boolean = true): foPage {
+        super.render(ctx, deep)
+
+        if (this.currentEffect != null) {
+            ctx.save();
+
+            ctx.fillStyle = this.currentEffect.color;
+            ctx.fillRect(0, 0, this.width, this.gridSizeY/3);
+
+            ctx.restore();   
+        }
+        //console.log(performance.now())
+        return this.markAsClean();
     }
 }
 
@@ -37,11 +76,13 @@ export class LEDLight extends foShape2D {
 
 export interface ILightArray2DProperties extends IfoShape2DProperties {
     total?: number;
+    groupId?: number;
 }
 
 export class LightArray<T extends LEDLight> extends foShape2D implements ILightArray2DProperties {
     opacity: number = 0.2;
     total: number;
+    groupId: number;
     private _rebuild: any;
 
 
@@ -50,6 +91,12 @@ export class LightArray<T extends LEDLight> extends foShape2D implements ILightA
 
         this.override(properties);
         this.setPinTop();
+    }
+
+    applyEffect(step: EffectStep) {
+        this.subcomponents.forEach(child => {
+            child.color = step.color;
+        })
     }
 
     clear() {

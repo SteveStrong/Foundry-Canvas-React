@@ -13,7 +13,7 @@ import { ColorTranslator } from 'colortranslator';
 import { TimeLinePage, TimeStep } from 'models/timeline';
 import { Effect } from 'models/effect';
 
-export const PaintTest3: FunctionComponent<any> = (): ReactElement => {
+export const PaintTest4: FunctionComponent<any> = (): ReactElement => {
     const sourceLED = new LEDLight();
     const sourceStep = new TimeStep();
 
@@ -21,37 +21,45 @@ export const PaintTest3: FunctionComponent<any> = (): ReactElement => {
         opacity: 0.02,
         color: 'white',
         width: 160 * sourceStep.width,
-        height: 5 * sourceStep.height,
+        height: 7 * sourceStep.height,
         gridSizeX: sourceStep.width,
         gridSizeY: sourceStep.height
     });
 
     const EffectStamp = (size: number = 20, row: number = 1, props?: any) => {
         return new Effect({
+            groupId: row,
             total: size,
             x: 0,
             y: sourceStep.height * row
         }).horizontal(TimeStep, props);
     };
 
-    const Effect1 = EffectStamp(35, 1);
-    const Effect2 = EffectStamp(40, 2, { color: 'green' }).followEffect(Effect1);
-    const Effect3 = EffectStamp(40, 1, { color: 'yellow' }).followEffect(Effect2);
-    const Effect4 = EffectStamp(40, 3, { color: 'red' }).followEffect(Effect3);
+    const Effect1 = EffectStamp(35, 2, { color: 'orange' });
+    const Effect2 = EffectStamp(40, 3, { color: 'green' }).followEffect(Effect1);
+    const Effect3 = EffectStamp(40, 2, { color: 'yellow' }).followEffect(Effect2);
+    const Effect4 = EffectStamp(40, 4, { color: 'red' }).followEffect(Effect3);
 
-    timelinePage.subcomponents.addMember(Effect1);
-    timelinePage.subcomponents.addMember(Effect2);
-    timelinePage.subcomponents.addMember(Effect3);
-    timelinePage.subcomponents.addMember(Effect4);
+    const Effect5 = EffectStamp(55, 5, { color: 'cyan' });
+    Effect5.setX(290);
+
+
+    timelinePage.addEffect(Effect1);
+    timelinePage.addEffect(Effect2);
+    timelinePage.addEffect(Effect3);
+    timelinePage.addEffect(Effect4);
+    timelinePage.addEffect(Effect5);
+
     const timelineCanvasParams = {
         width: timelinePage.width,
         height: timelinePage.height,
-        title: 'Timeline Canvas',
+        title: 'Timeline Canvas should draw and wait for change',
         draw: (ctx: CanvasRenderingContext2D) => {
-            timelinePage.render(ctx);
-            timelinePage.incrementTimecode();
+            timelinePage.isDirty && timelinePage.render(ctx);
         }
     };
+
+    timelinePage.start();
 
     const lightPage = new LightDesignPage({
         opacity: 0.02,
@@ -64,6 +72,7 @@ export const PaintTest3: FunctionComponent<any> = (): ReactElement => {
 
     const LEDStringStamp = (size: number = 20, row: number = 1, props?: any) => {
         return new LightArray({
+            groupId: row,
             total: size,
             x: lightPage.width / 2,
             y: sourceStep.height * row
@@ -83,28 +92,29 @@ export const PaintTest3: FunctionComponent<any> = (): ReactElement => {
 
     const ColorArrayV1 = ColorArrayStamp(blends, 0);
     const ColorArrayV2 = ColorArrayStamp(blends, 1);
-    lightPage.subcomponents.addMember(ColorArrayV1);
-    lightPage.subcomponents.addMember(ColorArrayV2);
+    // lightPage.addLightArray(ColorArrayV1);
+    // lightPage.addLightArray(ColorArrayV2);
 
-    const LEDString1 = LEDStringStamp(25, 3);
-    const LEDString2 = LEDStringStamp(25, 4);
-    const LEDString3 = LEDStringStamp(25, 5);
-    const LEDString4 = LEDStringStamp(25, 6);
-    const LEDString5 = LEDStringStamp(25, 7);
-    const LEDString6 = LEDStringStamp(25, 8);
-    lightPage.subcomponents.addMember(LEDString1);
-    lightPage.subcomponents.addMember(LEDString2);
-    lightPage.subcomponents.addMember(LEDString3);
-    lightPage.subcomponents.addMember(LEDString4);
-    lightPage.subcomponents.addMember(LEDString5);
-    lightPage.subcomponents.addMember(LEDString6);
+    const LEDString1 = LEDStringStamp(25, 1);
+    const LEDString2 = LEDStringStamp(25, 2);
+    const LEDString3 = LEDStringStamp(25, 3);
+    const LEDString4 = LEDStringStamp(25, 4);
+    const LEDString5 = LEDStringStamp(25, 5);
+    const LEDString6 = LEDStringStamp(25, 6);
+
+    lightPage.addLightArray(LEDString1);
+    lightPage.addLightArray(LEDString2);
+    lightPage.addLightArray(LEDString3);
+    lightPage.addLightArray(LEDString4);
+    lightPage.addLightArray(LEDString5);
+    lightPage.addLightArray(LEDString6);
 
     const lightCanvasParams = {
         width: lightPage.width,
         height: lightPage.height,
         title: 'Light Canvas',
         draw: (ctx: CanvasRenderingContext2D) => {
-            lightPage.render(ctx);
+            lightPage.isDirty && lightPage.render(ctx);
         }
     };
 
@@ -112,7 +122,6 @@ export const PaintTest3: FunctionComponent<any> = (): ReactElement => {
         <div>
             <Canvas {...timelineCanvasParams} />
             <Canvas {...lightCanvasParams} />
-            <ToJSON {...Tools.asJson(ColorArrayV1)} />
         </div>
     );
 };

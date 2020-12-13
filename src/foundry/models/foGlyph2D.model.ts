@@ -2,14 +2,14 @@ import { Tools } from './foTools';
 import { cPoint2D, cFrame } from './foGeometry2D';
 import { Matrix2D } from './foMatrix2D';
 
-import { iShape, iPoint2D, iRect, iFrame } from './foInterface';
+import { iPoint2D, iRect, iFrame } from './foInterface';
 
 
 import { Lifecycle } from './foLifecycle';
 
 
 import { foObject } from './foObject.model';
-import Color from 'color';
+
 
 export interface IfoGlyph2DProperties {
   opacity?: number;

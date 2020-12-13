@@ -1,19 +1,21 @@
 import { Subject } from 'rxjs';
 
-export enum Topics {
-    DOCUMENT_MODIFIED,
-    VIEW_STATE_TOGGLED
+
+
+export interface Message {
+    groupId: number;
+    data: any;
 }
 
 class rxPubSubClass {
-    private _subject = new Subject<Topics>();
+    private _subject = new Subject<Message>();
 
-    pubSub$(): Subject<Topics> {
+    hub$(): Subject<Message> {
         return this._subject;
     }
 
-    broadcast(topic: Topics) {
-        this._subject.next(topic);
+    broadcast(message: Message) {
+        this._subject.next(message);
     }
 }
 

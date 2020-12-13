@@ -1,9 +1,14 @@
 import { foObject } from "foundry/models/foObject.model";
 import { foPage } from "foundry/models/foPage.model";
 import { foShape2D, IfoShape2DProperties } from "foundry/models/foShape2D.model";
+import { Effect } from "./effect";
+import { rxPubSub } from "./rxPubSub";
 
 export class TimeLinePage extends foPage {
     timeCode: number = 0;
+    timeDelay: number = 10; // ms
+    activeStep: TimeStep;
+    _timer: any = undefined;
 
     constructor(properties?: IfoShape2DProperties, parent?: foObject) {
         super(properties, parent);
@@ -11,6 +16,32 @@ export class TimeLinePage extends foPage {
         this.override(properties);
         this.setPinLeft().setPinTop();
     }
+
+    start() {
+        this._timer && clearTimeout(this._timer);
+        this._timer = setTimeout(() => {
+            // console.log(this._timer, 'setTimeout');
+            if (!!(this._timer && !(this._timer % 2))) {
+                this.incrementTimecode();
+            }
+            this.start();
+        }, this.timeDelay);
+        return this;
+    }
+
+    stop() {
+        this._timer && clearTimeout(this._timer);
+        this._timer = undefined;
+        this.markAsClean();
+    }
+
+    addEffect(item: Effect<TimeStep>): TimeLinePage {
+        this.subcomponents.addMember(item);
+        item.computeTimeBoundry(this.timeDelay)
+        this.markAsDirty();
+        return this;
+    }
+
     drawTimecode(ctx: CanvasRenderingContext2D) {
         ctx.save();
         ctx.beginPath();
@@ -41,7 +72,7 @@ export class TimeLinePage extends foPage {
         this.drawTimecode(ctx);
     }
 
-    setTimecode(code:number) {
+    setTimecode(code: number) {
         this.timeCode = code - 1;;
         return this.incrementTimecode();
     }
@@ -51,7 +82,24 @@ export class TimeLinePage extends foPage {
         if (this.timeCode > this.width / this.gridSizeX) {
             this.timeCode = 0;
         }
-        return this;
+        const absTime = this.timeDelay * this.timeCode;
+        this._subcomponents?.forEach(item => {
+            const step = item as Effect<TimeStep>;
+            step.setTimecode(absTime, this.timeCode);
+        });
+
+        this._subcomponents?.forEach(item => {
+            const step = item as Effect<TimeStep>;
+            this.activeStep = step.activeStep;
+            if (step.activeStep != null) {
+                //console.log(step.activeStep.color, this.timeCode, this._subcomponents.length)
+                rxPubSub.broadcast({
+                    groupId: item['groupId'],
+                    data: step.activeStep
+                })
+            }
+        })
+        return this.markAsDirty();
     }
 }
 
@@ -73,11 +121,13 @@ export class TimeStep extends foShape2D {
 
 export interface ITimeLine2DProperties extends IfoShape2DProperties {
     total?: number;
+    groupId?: number;
 }
 
 export class TimeLine<T extends TimeStep> extends foShape2D implements ITimeLine2DProperties {
-    opacity: number = 0.2;
+    opacity: number = 1.0;
     total: number;
+    groupId: number;
     private _rebuild: any;
 
 
@@ -158,27 +208,5 @@ export class TimeLine<T extends TimeStep> extends foShape2D implements ITimeLine
     }
 }
 
-export class Effect<T extends TimeStep> extends TimeLine<T> implements ITimeLine2DProperties {
-    timeCode: number = 0;
-    constructor(properties?: ITimeLine2DProperties, parent?: foObject) {
-        super(properties, parent);
 
-        this.override(properties);
-    }
-
-    setX(x: number) {
-        this.x = x;
-        return this;
-    }
-
-    followEffect(source: Effect<T>) {
-        this.x = source.x + source.width;
-        return this;
-    }
-
-    setTimecode(code: number) {
-        this.timeCode = code;
-        return this;
-    }
-}
 

@@ -1,12 +1,8 @@
 
-import { cPoint2D, cFrame } from './foGeometry2D';
-import { iPoint2D, Action } from './foInterface';
 
-import { foGlyph2D, IfoGlyph2DProperties } from './foGlyph2D.model';
 
-import { WhereClause } from './foInterface';
 
-import { Matrix2D } from './foMatrix2D';
+import { TorusGeometry } from 'three';
 import { foObject } from './foObject.model';
 import { foShape2D, IfoShape2DProperties } from './foShape2D.model';
 
@@ -19,6 +15,7 @@ export interface IfoPageProperties extends IfoShape2DProperties {
 //a Shape is a graphic designed to behave like a visio shape
 //and have all the same properties
 export class foPage extends foShape2D implements IfoPageProperties {
+  private _isDirty: boolean = true;
   gridSizeX: number = 50;
   gridSizeY: number = 50;
   showBoundry: boolean = true;
@@ -31,7 +28,20 @@ export class foPage extends foShape2D implements IfoPageProperties {
     super(properties, parent);
     this.override(properties);
   }
-  
+
+  markAsDirty(): foPage {
+    this._isDirty = true;
+    return this;
+  }
+  markAsClean(): foPage {
+    this._isDirty = false;
+    return this;
+  }
+
+  get isDirty() {
+    return this._isDirty;
+  }
+
 
   protected _marginX: number;
   get marginX(): number {
@@ -72,7 +82,7 @@ export class foPage extends foShape2D implements IfoPageProperties {
 
   mouseLoc: any = {};
 
- 
+
 
 
 
@@ -81,7 +91,7 @@ export class foPage extends foShape2D implements IfoPageProperties {
     this.scaleY *= zoom;
   }
 
- 
+
 
 
 
@@ -200,7 +210,7 @@ export class foPage extends foShape2D implements IfoPageProperties {
     ctx.clearRect(0, 0, this.width, this.height);
 
     ctx.save();
-   
+
     this.drawName(ctx);
 
     this.preDraw && this.preDraw(ctx);
@@ -215,7 +225,8 @@ export class foPage extends foShape2D implements IfoPageProperties {
     ctx.restore();
 
     this.showBoundry && this.afterRender(ctx);
-    return this;
+
+    return this.markAsClean();
   }
 
   public preDraw = (ctx: CanvasRenderingContext2D): void => {
