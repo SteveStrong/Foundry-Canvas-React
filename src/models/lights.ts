@@ -1,6 +1,7 @@
 import { foObject } from "foundry/models/foObject.model";
 import { foPage } from "foundry/models/foPage.model";
 import { foShape2D, IfoShape2DProperties } from "foundry/models/foShape2D.model";
+import { EffectStep } from "./effect";
 import { rxPubSub } from "./rxPubSub";
 
 // function create<T>(c: { new(): T }): T {
@@ -12,6 +13,8 @@ export type Newable<T> = { new(...args: any[]): T; };
 
 export class LightDesignPage extends foPage {
     timeCode: number = 0;
+    currentEffect: EffectStep;
+
 
     constructor(properties?: IfoShape2DProperties, parent?: foObject) {
         super(properties, parent);
@@ -21,10 +24,12 @@ export class LightDesignPage extends foPage {
 
         rxPubSub.hub$().subscribe(item => {
             if (item.data && item.data?.color) {
+                this.currentEffect = item.data;
                 this.markAsDirty();
                 //console.log(item.data.color)
                 this.subcomponents.forEach(child => {
-                    child.color = item.data.color;
+                    const lights = child as LightArray<LEDLight>;
+                    lights.applyEffect(this.currentEffect);
                 })
             }
         })
@@ -34,6 +39,23 @@ export class LightDesignPage extends foPage {
         this.subcomponents.addMember(item);
         this.markAsDirty();
         return this;
+    }
+
+    public render(ctx: CanvasRenderingContext2D, deep: boolean = true): foPage {
+        super.render(ctx, deep)
+
+        if (this.currentEffect != null) {
+            ctx.save();
+
+            ctx.fillStyle = this.currentEffect.color;
+            ctx.fillRect(0, 0, this.width, this.gridSizeY);
+
+            ctx.restore();   
+        }
+ 
+
+
+        return this.markAsClean();
     }
 }
 
@@ -67,8 +89,12 @@ export class LightArray<T extends LEDLight> extends foShape2D implements ILightA
 
         this.override(properties);
         this.setPinTop();
+    }
 
-
+    applyEffect(step: EffectStep) {
+        this.subcomponents.forEach(child => {
+            child.color = step.color;
+        })
     }
 
     clear() {

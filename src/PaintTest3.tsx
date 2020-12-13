@@ -10,7 +10,8 @@ import { ColorArray, LEDLight, LightArray, LightDesignPage } from 'models/lights
 import { ToJSON } from 'core/foRenderer';
 import { Tools } from 'foundry/models/foTools';
 import { ColorTranslator } from 'colortranslator';
-import { Effect, TimeLinePage, TimeStep } from 'models/timeline';
+import { TimeLinePage, TimeStep } from 'models/timeline';
+import { Effect } from 'models/effect';
 
 export const PaintTest3: FunctionComponent<any> = (): ReactElement => {
     const sourceLED = new LEDLight();
@@ -36,7 +37,7 @@ export const PaintTest3: FunctionComponent<any> = (): ReactElement => {
     const Effect1 = EffectStamp(35, 1);
     const Effect2 = EffectStamp(40, 2, { color: 'green' }).followEffect(Effect1);
     const Effect3 = EffectStamp(40, 1, { color: 'yellow' }).followEffect(Effect2);
-    const Effect4 = EffectStamp(40, 3, { color: 'red'}).followEffect(Effect3);
+    const Effect4 = EffectStamp(40, 3, { color: 'red' }).followEffect(Effect3);
 
     timelinePage.subcomponents.addMember(Effect1);
     timelinePage.subcomponents.addMember(Effect2);

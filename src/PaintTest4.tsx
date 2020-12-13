@@ -10,10 +10,10 @@ import { ColorArray, LEDLight, LightArray, LightDesignPage } from 'models/lights
 import { ToJSON } from 'core/foRenderer';
 import { Tools } from 'foundry/models/foTools';
 import { ColorTranslator } from 'colortranslator';
-import { Effect, TimeLinePage, TimeStep } from 'models/timeline';
+import { TimeLinePage, TimeStep } from 'models/timeline';
+import { Effect } from 'models/effect';
 
 export const PaintTest4: FunctionComponent<any> = (): ReactElement => {
-
     const sourceLED = new LEDLight();
     const sourceStep = new TimeStep();
 
@@ -34,10 +34,10 @@ export const PaintTest4: FunctionComponent<any> = (): ReactElement => {
         }).horizontal(TimeStep, props);
     };
 
-    const Effect1 = EffectStamp(35, 1);
+    const Effect1 = EffectStamp(35, 1, { color: 'orange' });
     const Effect2 = EffectStamp(40, 2, { color: 'green' }).followEffect(Effect1);
     const Effect3 = EffectStamp(40, 1, { color: 'yellow' }).followEffect(Effect2);
-    const Effect4 = EffectStamp(40, 3, { color: 'red'}).followEffect(Effect3);
+    const Effect4 = EffectStamp(40, 3, { color: 'red' }).followEffect(Effect3);
 
     timelinePage.addEffect(Effect1);
     timelinePage.addEffect(Effect2);
@@ -84,8 +84,8 @@ export const PaintTest4: FunctionComponent<any> = (): ReactElement => {
 
     const ColorArrayV1 = ColorArrayStamp(blends, 0);
     const ColorArrayV2 = ColorArrayStamp(blends, 1);
-   // lightPage.addLightArray(ColorArrayV1);
-   // lightPage.addLightArray(ColorArrayV2);
+    // lightPage.addLightArray(ColorArrayV1);
+    // lightPage.addLightArray(ColorArrayV2);
 
     const LEDString1 = LEDStringStamp(25, 3);
     const LEDString2 = LEDStringStamp(25, 4);
@@ -93,7 +93,7 @@ export const PaintTest4: FunctionComponent<any> = (): ReactElement => {
     const LEDString4 = LEDStringStamp(25, 6);
     const LEDString5 = LEDStringStamp(25, 7);
     const LEDString6 = LEDStringStamp(25, 8);
-    
+
     lightPage.addLightArray(LEDString1);
     lightPage.addLightArray(LEDString2);
     lightPage.addLightArray(LEDString3);
@@ -112,7 +112,6 @@ export const PaintTest4: FunctionComponent<any> = (): ReactElement => {
 
     return (
         <div>
-            <ToJSON {...timelinePage.activeStep} />
             <Canvas {...timelineCanvasParams} />
             <Canvas {...lightCanvasParams} />
         </div>
