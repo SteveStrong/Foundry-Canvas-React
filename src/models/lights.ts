@@ -26,7 +26,6 @@ export class LightDesignPage extends foPage {
             if (item.data && item.data) {
                 this.currentEffect = item.data;
                 this.markAsDirty();
-                console.log(item)
                 this.subcomponents.forEach(child => {
                     const lights = child as LightArray<LEDLight>;
                     if (lights.groupId === item.groupId) {

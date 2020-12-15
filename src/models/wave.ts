@@ -1,6 +1,7 @@
 import { foObject } from "foundry/models/foObject.model";
 import { foPage } from "foundry/models/foPage.model";
 import { foShape2D, IfoShape2DProperties } from "foundry/models/foShape2D.model";
+import { single } from "rxjs/operators";
 import { rxPubSub } from "./rxPubSub";
 import { ITimeLine2DProperties, TimeLine, TimeStep } from "./timeline";
 
@@ -14,13 +15,15 @@ enum WaveType {
 
 export class Wave extends foObject {
     cycles: number = 1; // 1 means the full length,  2 means 1/2 for first cycle
-    
+    invert: boolean = false;
 }
 
 export class WaveShape extends foShape2D {
     color: string = 'tan';
     opacity: number = 0.3;
     wave: Wave;
+
+    rads:number = Math.PI / 180;
 
     constructor(properties?: IfoShape2DProperties, parent?: foObject) {
         super(properties, parent);
@@ -29,36 +32,57 @@ export class WaveShape extends foShape2D {
         this.setPinCenter().setPinMiddle();
     }
 
-    public render(ctx: CanvasRenderingContext2D, deep: boolean = true): foShape2D {
-        if (this.isInvisible) return;
-        ctx.save();
 
-        //this.drawOrigin(ctx);
-        this.updateContext(ctx);
-        //this.drawOriginX(ctx);
+    public drawSinWave = (ctx: CanvasRenderingContext2D) => {
 
-        this.preDraw && this.preDraw(ctx);
-        this.draw(ctx);
-        this.drawHover && this.drawHover(ctx);
-        //this.postDraw && this.postDraw(ctx);
+        ctx.moveTo(0, this.pinY());
+        ctx.lineTo(this.width, this.pinY());
 
-        this.isSelected && this.drawSelected(ctx);
+        let invert = 1;
+        let phase = 0;
+        let freq = 1;
+        let amp = invert * this.height * 3 / 8;
 
+        let length = (freq * 360);
+        let factor = this.width / length;
+        let shift = (this.width * phase) / length
+        let max = length + phase + 10;
 
-        ctx.restore();
-        return this;
+        for (let t = 0; t <= max; t += 10) {
+            let x = t * factor - shift;
+
+            let y = amp * Math.sin((this.rads * t)) + this.pinY();
+
+            ctx.lineTo(x, y);
+            ctx.stroke();
+        }
     }
 
-    public postDraw = (ctx: CanvasRenderingContext2D) => {
+    public draw = (ctx: CanvasRenderingContext2D): void => {
+        this.drawBackground(ctx);
+        this.drawSinWave(ctx);
+    }
+        
+    // public render(ctx: CanvasRenderingContext2D, deep: boolean = true): foShape2D {
+    //     if (this.isInvisible) return;
+    //     ctx.save();
 
-        ctx.beginPath();
-        //ctx.setLineDash([5, 5]);
-        ctx.moveTo(0, 0);
-        ctx.lineTo(this.width, this.height);
-        ctx.lineWidth = 3;
-        ctx.strokeStyle = '#003300';
-        ctx.stroke();
-    };
+    //     //this.drawOrigin(ctx);
+    //     this.updateContext(ctx);
+    //     //this.drawOriginX(ctx);
+
+    //     this.preDraw && this.preDraw(ctx);
+    //     this.draw(ctx);
+    //     this.drawPin(ctx);
+
+    //     this.drawHover && this.drawHover(ctx);
+    //     this.postDraw && this.postDraw(ctx);
+
+    //     this.isSelected && this.drawSelected(ctx);
+
+    //     ctx.restore();
+    //     return this;
+    // }
 }
 
 

@@ -23,8 +23,8 @@ export const PaintTest5: FunctionComponent<any> = (): ReactElement => {
     const wavePage = new WaveDesignPage({
         opacity: 0.02,
         color: 'white',
-        width: 800+10, 
-        height: 400+10,
+        width: 800, 
+        height: 400,
     });
 
     const wave = new WaveShape({
