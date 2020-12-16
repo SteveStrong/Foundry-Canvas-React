@@ -161,8 +161,8 @@ export const PaintTest6: FunctionComponent<any> = (): ReactElement => {
 
     Group1.start();
     Group2.start();
-        Group3.start();
-            Group4.start();
+    //Group3.start();
+    //Group4.start();
 
     return (
         <div>

@@ -107,13 +107,13 @@ export class TimeLinePage extends foPage {
         this._subcomponents?.forEach(item => {
             const step = item as Effect<TimeStep>;
             this.activeStep = step.activeStep;
-            if (step.activeStep != null) {
+            //if (step.activeStep != null) {
                 //console.log(step.activeStep.color, this.timeCode, this._subcomponents.length)
                 rxPubSub.broadcast({
-                    groupId: item['groupId'],
+                    groupId: this.groupId,
                     data: step.activeStep
                 })
-            }
+            //}
         })
         return this.markAsDirty();
     }
