@@ -13,6 +13,7 @@ import { ColorTranslator } from 'colortranslator';
 import { TimeLinePage, TimeStep } from 'models/timeline';
 import { Effect } from 'models/effect';
 import { WaveDesignPage, WaveShape } from 'models/wave';
+import { WalkerDesignPage } from 'models/walker';
 
 // https://github.com/Microsoft/TypeScript/wiki/Using-the-Compiler-API
 
