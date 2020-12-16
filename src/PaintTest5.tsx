@@ -163,10 +163,10 @@ export const PaintTest5: FunctionComponent<any> = (): ReactElement => {
 
     return (
         <div>
-            <Canvas {...waveCanvasParams} />
             <Canvas {...walkerCanvasParams} />
             <Canvas {...lightCanvasParams} />
             <Canvas {...timelineCanvasParams} />
+            <Canvas {...waveCanvasParams} />
         </div>
     );
 };
