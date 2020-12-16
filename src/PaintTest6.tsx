@@ -46,7 +46,7 @@ export const PaintTest6: FunctionComponent<any> = (): ReactElement => {
 
     const TimeLineGroupStamp = (groupId: number, rows: number = 2, props?: any) => {
         return new TimeLinePage({
-            opacity: 0.1,
+            color: 'white',
             groupId: groupId,
             width: 160 * sourceStep.width,
             height: rows * sourceStep.height,
@@ -56,27 +56,26 @@ export const PaintTest6: FunctionComponent<any> = (): ReactElement => {
         });
     };
 
-    const Group1 = TimeLineGroupStamp(1, 2, { color: 'orange' });
-    const Group2 = TimeLineGroupStamp(2, 2, { color: 'tan' });
-    const Group3 = TimeLineGroupStamp(3, 2, { color: 'yellow' });
-    const Group4 = TimeLineGroupStamp(4, 2, { color: 'orange' });
+    const Group1 = TimeLineGroupStamp(1);
+    const Group2 = TimeLineGroupStamp(2);
+    const Group3 = TimeLineGroupStamp(3);
+    const Group4 = TimeLineGroupStamp(4);
 
 
-    const EffectStamp = (size: number = 20, row: number = 1, props?: any) => {
+    const EffectStamp = (size: number = 20, props?: any) => {
         return new Effect({
-            groupId: row,
             total: size,
             x: 0,
-            y: sourceStep.height * row
+            y: 0
         }).horizontal(TimeStep, props);
     };
 
-    const Effect1 = EffectStamp(35, 2, { color: 'orange' });
-    const Effect2 = EffectStamp(40, 3, { color: 'green' }).followEffect(Effect1);
-    const Effect3 = EffectStamp(40, 2, { color: 'yellow' }).followEffect(Effect2);
-    const Effect4 = EffectStamp(40, 4, { color: 'red' }).followEffect(Effect3);
+    const Effect1 = EffectStamp(35, { color: 'orange' });
+    const Effect2 = EffectStamp(40, { color: 'green' }).followEffect(Effect1);
+    const Effect3 = EffectStamp(40, { color: 'yellow' }).followEffect(Effect2);
+    const Effect4 = EffectStamp(40, { color: 'red' }).followEffect(Effect3);
 
-    const Effect5 = EffectStamp(55, 5, { color: 'cyan' });
+    const Effect5 = EffectStamp(55, { color: 'cyan' });
     Effect5.setX(290);
 
     Group1.addEffect(Effect1);
@@ -159,6 +158,11 @@ export const PaintTest6: FunctionComponent<any> = (): ReactElement => {
             walkerPage.render(ctx);
         }
     };
+
+    Group1.start();
+    Group2.start();
+        Group3.start();
+            Group4.start();
 
     return (
         <div>

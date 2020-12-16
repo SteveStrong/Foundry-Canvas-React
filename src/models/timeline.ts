@@ -18,7 +18,7 @@ export class TimeLinePage extends foPage {
         this.setPinLeft().setPinTop();
     }
 
-    canvasParams(title?: string) {
+    canvasParams(title: string='') {
         const label = `Group ${this.groupId}`;
         const canvasParams = {
             width: this.width,
@@ -28,6 +28,7 @@ export class TimeLinePage extends foPage {
                 this.isDirty && this.render(ctx);
             }
         }
+
         return canvasParams;
     }
 
@@ -50,6 +51,7 @@ export class TimeLinePage extends foPage {
     }
 
     addEffect(item: Effect<TimeStep>): TimeLinePage {
+        item.groupId = this.groupId;
         this.subcomponents.addMember(item);
         item.computeTimeBoundry(this.timeDelay)
         this.markAsDirty();
