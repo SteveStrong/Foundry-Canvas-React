@@ -17,7 +17,7 @@ import { WalkerDesignPage } from 'models/walker';
 
 // https://github.com/Microsoft/TypeScript/wiki/Using-the-Compiler-API
 
-export const PaintTest5: FunctionComponent<any> = (): ReactElement => {
+export const PaintTest6: FunctionComponent<any> = (): ReactElement => {
     const sourceLED = new LEDLight();
     const sourceStep = new TimeStep();
 
@@ -43,14 +43,24 @@ export const PaintTest5: FunctionComponent<any> = (): ReactElement => {
         height: 200
     });
 
-    const timelinePage = new TimeLinePage({
-        opacity: 0.02,
-        color: 'white',
-        width: 160 * sourceStep.width,
-        height: 7 * sourceStep.height,
-        gridSizeX: sourceStep.width,
-        gridSizeY: sourceStep.height
-    });
+
+    const TimeLineGroupStamp = (groupId: number, rows: number = 2, props?: any) => {
+        return new TimeLinePage({
+            opacity: 0.1,
+            groupId: groupId,
+            width: 160 * sourceStep.width,
+            height: rows * sourceStep.height,
+            gridSizeX: sourceStep.width,
+            gridSizeY: sourceStep.height,
+            ...props
+        });
+    };
+
+    const Group1 = TimeLineGroupStamp(1, 2, { color: 'orange' });
+    const Group2 = TimeLineGroupStamp(2, 2, { color: 'tan' });
+    const Group3 = TimeLineGroupStamp(3, 2, { color: 'yellow' });
+    const Group4 = TimeLineGroupStamp(4, 2, { color: 'orange' });
+
 
     const EffectStamp = (size: number = 20, row: number = 1, props?: any) => {
         return new Effect({
@@ -69,22 +79,11 @@ export const PaintTest5: FunctionComponent<any> = (): ReactElement => {
     const Effect5 = EffectStamp(55, 5, { color: 'cyan' });
     Effect5.setX(290);
 
-    timelinePage.addEffect(Effect1);
-    timelinePage.addEffect(Effect2);
-    timelinePage.addEffect(Effect3);
-    timelinePage.addEffect(Effect4);
-    timelinePage.addEffect(Effect5);
-
-    const timelineCanvasParams = {
-        width: timelinePage.width,
-        height: timelinePage.height,
-        title: 'Timeline Canvas should draw and wait for change',
-        draw: (ctx: CanvasRenderingContext2D) => {
-            timelinePage.isDirty && timelinePage.render(ctx);
-        }
-    };
-
-    timelinePage.start();
+    Group1.addEffect(Effect1);
+    Group1.addEffect(Effect2);
+    Group2.addEffect(Effect3);
+    Group3.addEffect(Effect4);
+    Group4.addEffect(Effect5);
 
     const lightPage = new LightDesignPage({
         opacity: 0.02,
@@ -165,8 +164,11 @@ export const PaintTest5: FunctionComponent<any> = (): ReactElement => {
         <div>
             <Canvas {...walkerCanvasParams} />
             <Canvas {...lightCanvasParams} />
-            <Canvas {...timelineCanvasParams} />
-            <Canvas {...waveCanvasParams} />
+            <Canvas {...Group1.canvasParams()} />
+            <Canvas {...Group2.canvasParams()} />
+            <Canvas {...Group3.canvasParams()} />
+            <Canvas {...Group4.canvasParams()} />
+             <Canvas {...waveCanvasParams} />
         </div>
     );
 };

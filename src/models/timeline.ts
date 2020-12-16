@@ -5,6 +5,7 @@ import { Effect } from "./effect";
 import { rxPubSub } from "./rxPubSub";
 
 export class TimeLinePage extends foPage {
+    groupId: number = 0;
     timeCode: number = 0;
     timeDelay: number = 10; // ms
     activeStep: TimeStep;
@@ -15,6 +16,19 @@ export class TimeLinePage extends foPage {
 
         this.override(properties);
         this.setPinLeft().setPinTop();
+    }
+
+    canvasParams(title?: string) {
+        const label = `Group ${this.groupId}`;
+        const canvasParams = {
+            width: this.width,
+            height: this.height,
+            title: `${label}: ${title}`,
+            draw: (ctx: CanvasRenderingContext2D) => {
+                this.isDirty && this.render(ctx);
+            }
+        }
+        return canvasParams;
     }
 
     start() {
