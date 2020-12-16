@@ -23,8 +23,8 @@ export const PaintTest5: FunctionComponent<any> = (): ReactElement => {
     const wavePage = new WaveDesignPage({
         opacity: 0.02,
         color: 'white',
-        width: 800, 
-        height: 400,
+        width: 800,
+        height: 400
     });
 
     const wave = new WaveShape({
@@ -34,6 +34,13 @@ export const PaintTest5: FunctionComponent<any> = (): ReactElement => {
         height: 400
     });
     wavePage.addWave(wave);
+
+    const walkerPage = new WalkerDesignPage({
+        opacity: 0.02,
+        color: 'white',
+        width: 1000,
+        height: 200
+    });
 
     const timelinePage = new TimeLinePage({
         opacity: 0.02,
@@ -135,20 +142,30 @@ export const PaintTest5: FunctionComponent<any> = (): ReactElement => {
         }
     };
 
-        const waveCanvasParams = {
-            width: wavePage.width,
-            height: wavePage.height,
-            title: 'Wave Designer Canvas',
-            draw: (ctx: CanvasRenderingContext2D) => {
-                wavePage.render(ctx);
-            }
-        };
+    const waveCanvasParams = {
+        width: wavePage.width,
+        height: wavePage.height,
+        title: 'Wave Designer Canvas',
+        draw: (ctx: CanvasRenderingContext2D) => {
+            wavePage.render(ctx);
+        }
+    };
+
+    const walkerCanvasParams = {
+        width: walkerPage.width,
+        height: walkerPage.height,
+        title: 'Waker Designer Canvas',
+        draw: (ctx: CanvasRenderingContext2D) => {
+            walkerPage.render(ctx);
+        }
+    };
 
     return (
         <div>
             <Canvas {...waveCanvasParams} />
-            <Canvas {...timelineCanvasParams} />
+            <Canvas {...walkerCanvasParams} />
             <Canvas {...lightCanvasParams} />
+            <Canvas {...timelineCanvasParams} />
         </div>
     );
 };
