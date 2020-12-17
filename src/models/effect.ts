@@ -24,10 +24,6 @@ export class EffectStep extends TimeStep {
 
 export class Effect<T extends EffectStep> extends TimeLine<T> implements ITimeLine2DProperties {
     timeTrack: TimeTracker = new TimeTracker();
-    // timeCode: number = 0;
-    // absTimeStart: number = 0; // ms
-    // absTimeSpan: number = 0; // ms
-    // absTimeEnd: number = 0; // ms
     activeStep: T;
 
     constructor(properties?: ITimeLine2DProperties, parent?: foObject) {
@@ -36,19 +32,10 @@ export class Effect<T extends EffectStep> extends TimeLine<T> implements ITimeLi
         this.override(properties);
     }
 
-    _currentTime: number;
-    currentTime(): number {
-        return this._currentTime;
-    }
 
-    _currentStep: number;
-    currentStep(): number {
-        return this._currentStep;
-    }
 
     setTimecode(globalTimeCode: number, globalTime: number) {
-        this._currentStep = globalTimeCode - this.timeTrack.offsetStep;
-        this._currentTime = globalTime - this.timeTrack.offsetTime;
+        this.timeTrack.setTimecode(globalTimeCode, globalTime);
     }
 
     computeTimeBoundry(deltaTime: number) {
@@ -99,7 +86,7 @@ export class Effect<T extends EffectStep> extends TimeLine<T> implements ITimeLi
         let y = this.height - 10;
 
         ctx.font = '40px serif';
-        this.drawText(ctx, `label: ${this.timeTrack.currentTime()}`, x, y);
+        this.drawText(ctx, `effect: ${this.timeTrack.currentTime()}`, x, y);
 
         ctx.restore();
     }

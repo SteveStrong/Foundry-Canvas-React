@@ -123,7 +123,7 @@ export class TimeLinePage extends foPage {
         let y = this.height - 10;
 
         ctx.font = '40px serif';
-        this.drawText(ctx, `label: ${this.timeTrack.currentTime()}`, x, y);
+        this.drawText(ctx, `page: ${this.timeTrack.currentTime()}`, x, y);
 
         ctx.restore();
     }
