@@ -2,7 +2,7 @@ import { foObject } from "foundry/models/foObject.model";
 import { foPage } from "foundry/models/foPage.model";
 import { foShape2D, IfoShape2DProperties } from "foundry/models/foShape2D.model";
 import { rxPubSub } from "./rxPubSub";
-import { ITimeLine2DProperties, TimeLine, TimeStep } from "./timeline";
+import { ITimeLine2DProperties, TimeLine, TimeStep, TimeTracker } from "./timeline";
 
 
 export class EffectStep extends TimeStep {
@@ -23,6 +23,7 @@ export class EffectStep extends TimeStep {
 
 
 export class Effect<T extends EffectStep> extends TimeLine<T> implements ITimeLine2DProperties {
+    timeTrack: TimeTracker = new TimeTracker();
     timeCode: number = 0;
     absTimeStart: number = 0; // ms
     absTimeSpan: number = 0; // ms
@@ -33,6 +34,10 @@ export class Effect<T extends EffectStep> extends TimeLine<T> implements ITimeLi
         super(properties, parent);
 
         this.override(properties);
+    }
+
+    setTimecode(globalTimeCode: number, globalTime: number) {
+
     }
 
     computeTimeBoundry(deltaTime: number) {
@@ -62,16 +67,16 @@ export class Effect<T extends EffectStep> extends TimeLine<T> implements ITimeLi
         return this;
     }
 
-    setTimecode(absTime: number, code: number) {
-        if (absTime >= this.absTimeStart && absTime <= this.absTimeEnd) {
-            this.timeCode = code;
-            this.computeActiveStep(absTime);
-        } else {
-            this.timeCode = -1;
-            this.activeStep = undefined;
-        }
-        return this;
-    }
+    // setTimecode(absTime: number, code: number) {
+    //     if (absTime >= this.absTimeStart && absTime <= this.absTimeEnd) {
+    //         this.timeCode = code;
+    //         this.computeActiveStep(absTime);
+    //     } else {
+    //         this.timeCode = -1;
+    //         this.activeStep = undefined;
+    //     }
+    //     return this;
+    // }
 
     
     public draw = (ctx: CanvasRenderingContext2D): void => {

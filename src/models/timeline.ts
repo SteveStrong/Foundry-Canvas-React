@@ -1,15 +1,41 @@
+import { foCollection } from "foundry/models/foCollection.model";
 import { foObject } from "foundry/models/foObject.model";
 import { foPage } from "foundry/models/foPage.model";
 import { foShape2D, IfoShape2DProperties } from "foundry/models/foShape2D.model";
 import { Effect } from "./effect";
 import { rxPubSub } from "./rxPubSub";
 
+interface ITimeTracker {
+    timeStepCounts: number;
+    timeScale: number;
+    offsetTime: number; 
+    currentTime: number; 
+    offsetSteps(): number;
+}
+
+export class TimeTracker extends foObject implements ITimeTracker {
+    timeStepCounts: number;
+    timeScale: number;
+    offsetTime: number = 0;
+    currentTime: number;
+
+    constructor(properties?: any, parent?: foObject) {
+        super(properties, parent);
+        this.override(properties);
+    }
+
+    offsetSteps(): number {
+        return 0;
+    }
+
+    setTimecode(globalTimeCode: number, globalTime: number) {
+
+    }
+}
+
 export class TimeLinePage extends foPage {
     groupId: number = 0;
-    timeCode: number = 0;
-    timeDelay: number = 10; // ms
-    activeStep: TimeStep;
-    _timer: any = undefined;
+    timeTrack: TimeTracker = new TimeTracker();
 
     constructor(properties?: IfoShape2DProperties, parent?: foObject) {
         super(properties, parent);
@@ -32,28 +58,11 @@ export class TimeLinePage extends foPage {
         return canvasParams;
     }
 
-    start() {
-        this._timer && clearTimeout(this._timer);
-        this._timer = setTimeout(() => {
-            // console.log(this._timer, 'setTimeout');
-            if (!!(this._timer && !(this._timer % 2))) {
-                this.incrementTimecode();
-            }
-            this.start();
-        }, this.timeDelay);
-        return this;
-    }
-
-    stop() {
-        this._timer && clearTimeout(this._timer);
-        this._timer = undefined;
-        this.markAsClean();
-    }
 
     addEffect(item: Effect<TimeStep>): TimeLinePage {
         item.groupId = this.groupId;
         this.subcomponents.addMember(item);
-        item.computeTimeBoundry(this.timeDelay)
+        //item.computeTimeBoundry(this.timeDelay)
         this.markAsDirty();
         return this;
     }
@@ -61,7 +70,6 @@ export class TimeLinePage extends foPage {
     drawTimecode(ctx: CanvasRenderingContext2D) {
         ctx.save();
         ctx.beginPath();
-
 
         ctx.strokeStyle = 'black';
         ctx.lineWidth = 10;
@@ -72,9 +80,8 @@ export class TimeLinePage extends foPage {
         const height = this.height / this.scaleY;
         const bottom = top + height;
 
-
         //draw vertical...
-        let x = this.gridSizeX * this.timeCode;
+        let x = this.gridSizeX * this.timeTrack.offsetSteps();
         ctx.moveTo(x, top);
         ctx.lineTo(x, bottom);
 
@@ -88,36 +95,90 @@ export class TimeLinePage extends foPage {
         this.drawTimecode(ctx);
     }
 
-    setTimecode(code: number) {
-        this.timeCode = code - 1;;
-        return this.incrementTimecode();
-    }
 
-    incrementTimecode() {
-        this.timeCode++;
-        if (this.timeCode > this.width / this.gridSizeX) {
-            this.timeCode = 0;
-        }
-        const absTime = this.timeDelay * this.timeCode;
+    setTimecode(globalTimeCode: number, globalTime: number) {
+        this.timeTrack.setTimecode(globalTimeCode, globalTime)
+        // if (this.timeCode > this.width / this.gridSizeX) {
+        //     this.timeCode = 0;
+        // }
         this._subcomponents?.forEach(item => {
             const step = item as Effect<TimeStep>;
-            step.setTimecode(absTime, this.timeCode);
+            step.setTimecode(globalTime, globalTime);
         });
 
         this._subcomponents?.forEach(item => {
             const step = item as Effect<TimeStep>;
-            this.activeStep = step.activeStep;
-            //if (step.activeStep != null) {
+
                 //console.log(step.activeStep.color, this.timeCode, this._subcomponents.length)
-                rxPubSub.broadcast({
-                    groupId: this.groupId,
-                    data: step.activeStep
-                })
-            //}
+            //only broadcase if the value change for active step
+            //including NO active step
+
+            rxPubSub.broadcast({
+                groupId: this.groupId,
+                data: step.activeStep
+            })
+
         })
         return this.markAsDirty();
     }
 }
+
+
+export class GlobalClock extends foObject {
+    _timer: any = undefined;
+    timeDelay: number = 10;
+    timeCode: number = 0;
+
+    protected _subcomponents: foCollection<TimeLinePage>;
+    get subcomponents(): foCollection<TimeLinePage> {
+        if (!this._subcomponents) {
+            this._subcomponents = new foCollection<TimeLinePage>()
+        }
+        return this._subcomponents;
+    }
+
+    addTimeLinePage(item: TimeLinePage): GlobalClock {
+        this.subcomponents.addMember(item);
+        item.markAsDirty();
+        return this;
+    }
+
+    notifyComponents(globalTimeCode: number, globalTime: number) {
+        this.subcomponents.forEach(item => {
+            item.setTimecode(globalTimeCode, globalTime);
+            item.markAsClean();
+        });
+    }
+
+    markAsClean() {
+        this.subcomponents.forEach(item => {
+            item.markAsClean();
+        });
+    }
+
+    start() {
+        this._timer = setTimeout(() => {
+            if (!!(this._timer && !(this._timer % 2))) {
+                this.timeCode++;
+                this.notifyComponents(this.timeCode, this.timeDelay * this.timeCode);
+            }
+            clearTimeout(this._timer);
+            this.start();
+        }, this.timeDelay);
+
+        return this;
+    }
+
+    stop() {
+        this._timer && clearTimeout(this._timer);
+        this._timer = undefined;
+        this.markAsClean();
+    }
+}
+
+export let SharedTimer: GlobalClock = new GlobalClock();
+
+
 
 export class TimeStep extends foShape2D {
     color: string = 'blue';

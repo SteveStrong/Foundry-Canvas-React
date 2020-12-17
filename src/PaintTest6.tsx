@@ -10,7 +10,7 @@ import { ColorArray, LEDLight, LightArray, LightDesignPage } from 'models/lights
 import { ToJSON } from 'core/foRenderer';
 import { Tools } from 'foundry/models/foTools';
 import { ColorTranslator } from 'colortranslator';
-import { TimeLinePage, TimeStep } from 'models/timeline';
+import { SharedTimer, TimeLinePage, TimeStep } from 'models/timeline';
 import { Effect } from 'models/effect';
 import { WaveDesignPage, WaveShape } from 'models/wave';
 import { WalkerDesignPage } from 'models/walker';
@@ -43,7 +43,6 @@ export const PaintTest6: FunctionComponent<any> = (): ReactElement => {
         height: 200
     });
 
-
     const TimeLineGroupStamp = (groupId: number, rows: number = 2, props?: any) => {
         return new TimeLinePage({
             color: 'white',
@@ -60,7 +59,10 @@ export const PaintTest6: FunctionComponent<any> = (): ReactElement => {
     const Group2 = TimeLineGroupStamp(2);
     const Group3 = TimeLineGroupStamp(3);
     const Group4 = TimeLineGroupStamp(4);
-
+    SharedTimer.addTimeLinePage(Group1)
+        .addTimeLinePage(Group2)
+        .addTimeLinePage(Group3)
+        .addTimeLinePage(Group4);
 
     const EffectStamp = (size: number = 20, props?: any) => {
         return new Effect({
@@ -159,10 +161,8 @@ export const PaintTest6: FunctionComponent<any> = (): ReactElement => {
         }
     };
 
-    Group1.start();
-    Group2.start();
-    //Group3.start();
-    //Group4.start();
+
+    SharedTimer.start();
 
     return (
         <div>
@@ -172,7 +172,7 @@ export const PaintTest6: FunctionComponent<any> = (): ReactElement => {
             <Canvas {...Group2.canvasParams()} />
             <Canvas {...Group3.canvasParams()} />
             <Canvas {...Group4.canvasParams()} />
-             <Canvas {...waveCanvasParams} />
+            <Canvas {...waveCanvasParams} />
         </div>
     );
 };

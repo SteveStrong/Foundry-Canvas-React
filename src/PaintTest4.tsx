@@ -59,7 +59,7 @@ export const PaintTest4: FunctionComponent<any> = (): ReactElement => {
         }
     };
 
-    timelinePage.start();
+    //OBE timelinePage.start();
 
     const lightPage = new LightDesignPage({
         opacity: 0.02,
