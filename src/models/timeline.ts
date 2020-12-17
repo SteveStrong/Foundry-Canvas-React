@@ -24,10 +24,10 @@ export interface ITimeTracker extends ITimeSpec {
 }
 
 export class TimeTracker extends foObject implements ITimeTracker {
-    timeStepLength: number;
-    timeScale: number;
-    offsetTime: number;
-    offsetStep: number;
+    timeStepLength: number = 1;
+    timeScale: number = 1;
+    offsetTime: number = 0;
+    offsetStep: number = 0;
 
     constructor(properties?: any, parent?: foObject) {
         super(properties, parent);
