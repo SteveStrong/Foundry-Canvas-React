@@ -43,11 +43,12 @@ export const PaintTest6: FunctionComponent<any> = (): ReactElement => {
         height: 200
     });
 
+    const groupSteps = 160;
     const TimeLineGroupStamp = (groupId: number, rows: number = 2, props?: any) => {
         return new TimeLinePage({
             color: 'white',
             groupId: groupId,
-            width: 160 * sourceStep.width,
+            width: groupSteps * sourceStep.width,
             height: rows * sourceStep.height,
             gridSizeX: sourceStep.width,
             gridSizeY: sourceStep.height,
@@ -77,7 +78,7 @@ export const PaintTest6: FunctionComponent<any> = (): ReactElement => {
     const Effect3 = EffectStamp(40, { color: 'yellow' }).followEffect(Effect2);
     const Effect4 = EffectStamp(40, { color: 'red' }).followEffect(Effect3);
 
-    const Effect5 = EffectStamp(55, { color: 'cyan' });
+    const Effect5 = EffectStamp(55, { color: 'blue' });
     Effect5.setX(290);
 
     Group1.addEffect(Effect1);
@@ -87,10 +88,10 @@ export const PaintTest6: FunctionComponent<any> = (): ReactElement => {
     Group4.addEffect(Effect5);
 
     const lightPage = new LightDesignPage({
-        opacity: 0.02,
+        opacity: 1.0,
         color: 'white',
-        width: 71 * sourceLED.width,
-        height: 10 * sourceLED.height,
+        width: 35 * sourceLED.width,
+        height: 8 * sourceLED.height,
         gridSizeX: sourceLED.width,
         gridSizeY: sourceLED.height
     });
@@ -104,21 +105,7 @@ export const PaintTest6: FunctionComponent<any> = (): ReactElement => {
         }).horizontal(LEDLight, props);
     };
 
-    const mult = 5;
-    const blends = ColorTranslator.getBlendHEX('#FF00FF', '#FFFF00', mult + 10 * mult);
 
-    const ColorArrayStamp = (colors: string[], row: number = 1) => {
-        return new ColorArray({
-            colors: colors,
-            x: lightPage.width / 2,
-            y: sourceLED.height * row
-        }).horizontal(LEDLight);
-    };
-
-    const ColorArrayV1 = ColorArrayStamp(blends, 0);
-    const ColorArrayV2 = ColorArrayStamp(blends, 1);
-    // lightPage.addLightArray(ColorArrayV1);
-    // lightPage.addLightArray(ColorArrayV2);
 
     const LEDString1 = LEDStringStamp(25, 1);
     const LEDString2 = LEDStringStamp(25, 2);
@@ -162,6 +149,7 @@ export const PaintTest6: FunctionComponent<any> = (): ReactElement => {
     };
 
 
+    //SharedTimer.override({ endTimeCode: groupSteps });
     SharedTimer.start();
 
     return (

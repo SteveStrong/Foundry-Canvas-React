@@ -61,7 +61,7 @@ export class LightDesignPage extends foPage {
 export class LEDLight extends foShape2D {
     color: string = 'blue';
     opacity: number = 0.3;
-    _width: number = 25;
+    _width: number = 50;
     _height: number = 50;
 
     constructor(properties?: IfoShape2DProperties, parent?: foObject) {

@@ -24,10 +24,10 @@ export class EffectStep extends TimeStep {
 
 export class Effect<T extends EffectStep> extends TimeLine<T> implements ITimeLine2DProperties {
     timeTrack: TimeTracker = new TimeTracker();
-    timeCode: number = 0;
-    absTimeStart: number = 0; // ms
-    absTimeSpan: number = 0; // ms
-    absTimeEnd: number = 0; // ms
+    // timeCode: number = 0;
+    // absTimeStart: number = 0; // ms
+    // absTimeSpan: number = 0; // ms
+    // absTimeEnd: number = 0; // ms
     activeStep: T;
 
     constructor(properties?: ITimeLine2DProperties, parent?: foObject) {
@@ -36,24 +36,35 @@ export class Effect<T extends EffectStep> extends TimeLine<T> implements ITimeLi
         this.override(properties);
     }
 
-    setTimecode(globalTimeCode: number, globalTime: number) {
+    _currentTime: number;
+    currentTime(): number {
+        return this._currentTime;
+    }
 
+    _currentStep: number;
+    currentStep(): number {
+        return this._currentStep;
+    }
+
+    setTimecode(globalTimeCode: number, globalTime: number) {
+        this._currentStep = globalTimeCode - this.timeTrack.offsetStep;
+        this._currentTime = globalTime - this.timeTrack.offsetTime;
     }
 
     computeTimeBoundry(deltaTime: number) {
         const item = this.subcomponents.first();
-        this.absTimeStart = deltaTime * (this.x / item.width);
-        this.absTimeSpan = deltaTime * this.subcomponents.length;
-        this.absTimeEnd = this.absTimeStart + this.absTimeSpan;
+        // this.absTimeStart = deltaTime * (this.x / item.width);
+        // this.absTimeSpan = deltaTime * this.subcomponents.length;
+        // this.absTimeEnd = this.absTimeStart + this.absTimeSpan;
     }
 
     computeActiveStep(absTime: number): T {
         const members = this.subcomponents.members;
-        const deltaTime = this.absTimeSpan / members.length;
-        const localTime = absTime - this.absTimeStart;
-        const step = localTime / deltaTime;
-        const item = members[step-1];
-        this.activeStep = item as T;
+        // const deltaTime = this.absTimeSpan / members.length;
+        // const localTime = absTime - this.absTimeStart;
+        // const step = localTime / deltaTime;
+        // const item = members[step-1];
+        // this.activeStep = item as T;
         return this.activeStep;
     }
 
@@ -78,19 +89,27 @@ export class Effect<T extends EffectStep> extends TimeLine<T> implements ITimeLi
     //     return this;
     // }
 
-    
-    public draw = (ctx: CanvasRenderingContext2D): void => {
-        
+    public drawLabel = (ctx: CanvasRenderingContext2D): void => {
+
         ctx.save();
         ctx.fillStyle = 'black';
         ctx.globalAlpha = 1.0;
 
         let x = this.width / 2;
         let y = this.height - 10;
-        
+
         ctx.font = '40px serif';
-        this.drawText(ctx, `${this.activeStep ? this.timeCode: '*' }`, x, y);
- 
+        this.drawText(ctx, `label: ${this.timeTrack.currentTime()}`, x, y);
+
+        ctx.restore();
+    }
+    
+    public draw = (ctx: CanvasRenderingContext2D): void => {
+        
+        ctx.save();
+
+        this.drawLabel(ctx);
+
         ctx.restore();
     }
 }

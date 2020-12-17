@@ -2,34 +2,57 @@ import { foCollection } from "foundry/models/foCollection.model";
 import { foObject } from "foundry/models/foObject.model";
 import { foPage } from "foundry/models/foPage.model";
 import { foShape2D, IfoShape2DProperties } from "foundry/models/foShape2D.model";
+import { Tools } from "foundry/models/foTools";
 import { Effect } from "./effect";
 import { rxPubSub } from "./rxPubSub";
 
-interface ITimeTracker {
-    timeStepCounts: number;
+export interface ITimeSpec {
+    timeStepLength: number;
     timeScale: number;
-    offsetTime: number; 
-    currentTime: number; 
-    offsetSteps(): number;
+    offsetTime: number;
+    offsetStep: number;
+}
+
+export interface ITimeTracker extends ITimeSpec {
+    timeStepLength: number;
+    timeScale: number;
+    offsetTime: number;
+    offsetStep: number;
+
+    currentTime(): number;
+    currentStep(): number;
 }
 
 export class TimeTracker extends foObject implements ITimeTracker {
-    timeStepCounts: number;
+    timeStepLength: number;
     timeScale: number;
-    offsetTime: number = 0;
-    currentTime: number;
+    offsetTime: number;
+    offsetStep: number;
 
     constructor(properties?: any, parent?: foObject) {
         super(properties, parent);
         this.override(properties);
     }
 
-    offsetSteps(): number {
-        return 0;
+    setSpec(spec: ITimeSpec) {
+        this.timeStepLength = spec.timeStepLength;
+        this.timeScale = spec.timeScale;
+        this.offsetTime = spec.offsetTime;
+    }
+
+    _currentTime: number;
+    currentTime(): number {
+        return this._currentTime;
+    }
+
+    _currentStep: number;
+    currentStep(): number {
+        return this._currentStep;
     }
 
     setTimecode(globalTimeCode: number, globalTime: number) {
-
+        this._currentStep = globalTimeCode - this.offsetStep;
+        this._currentTime = globalTime - this.offsetTime;
     }
 }
 
@@ -44,7 +67,7 @@ export class TimeLinePage extends foPage {
         this.setPinLeft().setPinTop();
     }
 
-    canvasParams(title: string='') {
+    canvasParams(title: string = '') {
         const label = `Group ${this.groupId}`;
         const canvasParams = {
             width: this.width,
@@ -81,7 +104,7 @@ export class TimeLinePage extends foPage {
         const bottom = top + height;
 
         //draw vertical...
-        let x = this.gridSizeX * this.timeTrack.offsetSteps();
+        let x = this.timeTrack.currentTime();
         ctx.moveTo(x, top);
         ctx.lineTo(x, bottom);
 
@@ -89,18 +112,33 @@ export class TimeLinePage extends foPage {
         ctx.restore();
     }
 
+
+    public drawLabel = (ctx: CanvasRenderingContext2D): void => {
+
+        ctx.save();
+        ctx.fillStyle = 'black';
+        ctx.globalAlpha = 1.0;
+
+        let x = this.width / 2;
+        let y = this.height - 10;
+
+        ctx.font = '40px serif';
+        this.drawText(ctx, `label: ${this.timeTrack.currentTime()}`, x, y);
+
+        ctx.restore();
+    }
+
     public draw = (ctx: CanvasRenderingContext2D): void => {
         this.drawGrid(ctx);
         //this.drawPage(ctx);
+        this.drawLabel(ctx);
         this.drawTimecode(ctx);
     }
 
 
     setTimecode(globalTimeCode: number, globalTime: number) {
         this.timeTrack.setTimecode(globalTimeCode, globalTime)
-        // if (this.timeCode > this.width / this.gridSizeX) {
-        //     this.timeCode = 0;
-        // }
+
         this._subcomponents?.forEach(item => {
             const step = item as Effect<TimeStep>;
             step.setTimecode(globalTime, globalTime);
@@ -109,14 +147,14 @@ export class TimeLinePage extends foPage {
         this._subcomponents?.forEach(item => {
             const step = item as Effect<TimeStep>;
 
-                //console.log(step.activeStep.color, this.timeCode, this._subcomponents.length)
+            //console.log(step.activeStep.color, this.timeCode, this._subcomponents.length)
             //only broadcase if the value change for active step
             //including NO active step
 
-            rxPubSub.broadcast({
-                groupId: this.groupId,
-                data: step.activeStep
-            })
+            // rxPubSub.broadcast({
+            //     groupId: this.groupId,
+            //     data: step.activeStep
+            // })
 
         })
         return this.markAsDirty();
@@ -126,8 +164,22 @@ export class TimeLinePage extends foPage {
 
 export class GlobalClock extends foObject {
     _timer: any = undefined;
-    timeDelay: number = 10;
+    timeTrack: TimeTracker = new TimeTracker();
+
     timeCode: number = 0;
+
+    constructor(properties?: any, parent?: foObject) {
+        super(properties, parent);
+
+        this.timeTrack.setSpec({
+            timeScale: 10,
+            timeStepLength: 100,
+            offsetTime: 0,
+            offsetStep: 0,
+        })
+
+        this.override(properties);
+    }
 
     protected _subcomponents: foCollection<TimeLinePage>;
     get subcomponents(): foCollection<TimeLinePage> {
@@ -138,6 +190,7 @@ export class GlobalClock extends foObject {
     }
 
     addTimeLinePage(item: TimeLinePage): GlobalClock {
+        item.timeTrack.setSpec(this.timeTrack);
         this.subcomponents.addMember(item);
         item.markAsDirty();
         return this;
@@ -146,7 +199,7 @@ export class GlobalClock extends foObject {
     notifyComponents(globalTimeCode: number, globalTime: number) {
         this.subcomponents.forEach(item => {
             item.setTimecode(globalTimeCode, globalTime);
-            item.markAsClean();
+            item.markAsDirty();
         });
     }
 
@@ -160,11 +213,15 @@ export class GlobalClock extends foObject {
         this._timer = setTimeout(() => {
             if (!!(this._timer && !(this._timer % 2))) {
                 this.timeCode++;
-                this.notifyComponents(this.timeCode, this.timeDelay * this.timeCode);
+                this.notifyComponents(this.timeCode, this.timeTrack.timeScale * this.timeCode);
+
+                if (this.timeCode === this.timeTrack.timeStepLength) {
+                    this.timeCode = 0;
+                }
             }
             clearTimeout(this._timer);
             this.start();
-        }, this.timeDelay);
+        }, this.timeTrack.timeScale);
 
         return this;
     }
