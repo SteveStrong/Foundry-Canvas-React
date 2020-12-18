@@ -73,13 +73,15 @@ export const PaintTest6: FunctionComponent<any> = (): ReactElement => {
         }).horizontal(TimeStep, props);
     };
 
-    const Effect1 = EffectStamp(35, { color: 'orange' });
+    const Effect1 = EffectStamp(30, { color: 'orange' }).setTimeOffset(10);
     const Effect2 = EffectStamp(40, { color: 'green' }).followEffect(Effect1);
     const Effect3 = EffectStamp(40, { color: 'yellow' }).followEffect(Effect2);
     const Effect4 = EffectStamp(40, { color: 'red' }).followEffect(Effect3);
 
     const Effect5 = EffectStamp(55, { color: 'blue' });
-    Effect5.setX(290);
+    const target = 50;
+    //Effect5.setX(size * target).setTimeOffset(target, SharedTimer.computeTimeOffset(target));;
+    Effect5.setTimeOffset(target);
 
     Group1.addEffect(Effect1);
     Group1.addEffect(Effect2);

@@ -67,7 +67,6 @@ export const PaintTest5: FunctionComponent<any> = (): ReactElement => {
     const Effect4 = EffectStamp(40, 4, { color: 'red' }).followEffect(Effect3);
 
     const Effect5 = EffectStamp(55, 5, { color: 'cyan' });
-    Effect5.setX(290);
 
     timelinePage.addEffect(Effect1);
     timelinePage.addEffect(Effect2);

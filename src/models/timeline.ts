@@ -34,7 +34,7 @@ export class TimeTracker extends foObject implements ITimeTracker {
         this.override(properties);
     }
 
-    setOffset(step: number, time: number) {
+    setTimeOffset(step: number, time: number) {
         this.offsetStep = step;
         this.offsetTime = time;
     }
@@ -45,12 +45,12 @@ export class TimeTracker extends foObject implements ITimeTracker {
         this.offsetTime = spec.offsetTime;
     }
 
-    _currentTime: number;
+    private _currentTime: number;
     currentTime(): number {
         return this._currentTime;
     }
 
-    _currentStep: number;
+    private _currentStep: number;
     currentStep(): number {
         return this._currentStep;
     }
@@ -87,7 +87,7 @@ export class TimeLinePage extends foPage {
     }
 
     setOffset(step: number, time: number): TimeLinePage {
-        this.timeTrack.setOffset(step, time);
+        this.timeTrack.setTimeOffset(step, time);
         return this;
     }
 
@@ -190,8 +190,12 @@ export class GlobalClock extends foObject {
         this.override(properties);
     }
 
-    setOffset(step: number, time: number): GlobalClock {
-        this.timeTrack.setOffset(step, time);
+    computeTimeOffset(step: number) {
+        return this.timeTrack.timeScale * step;
+    }
+
+    setTimeOffset(step: number, time: number): GlobalClock {
+        this.timeTrack.setTimeOffset(step, time);
         return this;
     }
 

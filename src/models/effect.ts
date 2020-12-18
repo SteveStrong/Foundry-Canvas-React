@@ -2,7 +2,7 @@ import { foObject } from "foundry/models/foObject.model";
 import { foPage } from "foundry/models/foPage.model";
 import { foShape2D, IfoShape2DProperties } from "foundry/models/foShape2D.model";
 import { rxPubSub } from "./rxPubSub";
-import { ITimeLine2DProperties, TimeLine, TimeStep, TimeTracker } from "./timeline";
+import { ITimeLine2DProperties, SharedTimer, TimeLine, TimeStep, TimeTracker } from "./timeline";
 
 
 export class EffectStep extends TimeStep {
@@ -33,52 +33,30 @@ export class Effect<T extends EffectStep> extends TimeLine<T> implements ITimeLi
     }
 
 
-    setOffset(step: number, time: number): Effect<T> {
-        this.timeTrack.setOffset(step, time);
-        return this;
+    setTimeOffset(step: number, time?: number): Effect<T> {
+        const realtime = time != undefined ? time : SharedTimer.computeTimeOffset(step);
+        this.timeTrack.setTimeOffset(step, realtime);
+        const block = this.subcomponents.first();
+        return this.setX(step * block.width);
     }
 
     setTimecode(globalTimeCode: number, globalTime: number) {
         this.timeTrack.setTimecode(globalTimeCode, globalTime);
     }
 
-    computeTimeBoundry(deltaTime: number) {
-        const item = this.subcomponents.first();
-        // this.absTimeStart = deltaTime * (this.x / item.width);
-        // this.absTimeSpan = deltaTime * this.subcomponents.length;
-        // this.absTimeEnd = this.absTimeStart + this.absTimeSpan;
+    endTimeStep()
+    {
+        return this.timeTrack.offsetStep + this.subcomponents.length;
     }
 
-    computeActiveStep(absTime: number): T {
-        const members = this.subcomponents.members;
-        // const deltaTime = this.absTimeSpan / members.length;
-        // const localTime = absTime - this.absTimeStart;
-        // const step = localTime / deltaTime;
-        // const item = members[step-1];
-        // this.activeStep = item as T;
-        return this.activeStep;
-    }
-
-    setX(x: number) {
+    private setX(x: number) {
         this.x = x;
         return this;
     }
 
-    followEffect(source: Effect<T>) {
-        this.x = source.x + source.width;
-        return this;
+    followEffect(source: Effect<T>): Effect<T> {
+        return this.setTimeOffset(source.endTimeStep());
     }
-
-    // setTimecode(absTime: number, code: number) {
-    //     if (absTime >= this.absTimeStart && absTime <= this.absTimeEnd) {
-    //         this.timeCode = code;
-    //         this.computeActiveStep(absTime);
-    //     } else {
-    //         this.timeCode = -1;
-    //         this.activeStep = undefined;
-    //     }
-    //     return this;
-    // }
 
     public drawLabel = (ctx: CanvasRenderingContext2D): void => {
 
@@ -90,7 +68,7 @@ export class Effect<T extends EffectStep> extends TimeLine<T> implements ITimeLi
         let y = this.height - 10;
 
         ctx.font = '40px serif';
-        this.drawText(ctx, `effect: ${this.timeTrack.currentTime()}`, x, y);
+        this.drawText(ctx, `effect: ${this.timeTrack.offsetTime}=>${this.timeTrack.currentTime()}`, x, y);
 
         ctx.restore();
     }
