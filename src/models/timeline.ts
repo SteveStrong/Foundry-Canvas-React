@@ -11,6 +11,7 @@ export interface ITimeSpec {
     timeScale: number;
     offsetTime: number;
     offsetStep: number;
+    totalSteps: number;
 }
 
 export interface ITimeTracker extends ITimeSpec {
@@ -18,16 +19,19 @@ export interface ITimeTracker extends ITimeSpec {
     timeScale: number;
     offsetTime: number;
     offsetStep: number;
+    totalSteps: number;
 
     currentTime(): number;
     currentStep(): number;
 }
+
 
 export class TimeTracker extends foObject implements ITimeTracker {
     timeStepLength: number = 1;
     timeScale: number = 1;
     offsetTime: number = 0;
     offsetStep: number = 0;
+    totalSteps: number = 1;
 
     constructor(properties?: any, parent?: foObject) {
         super(properties, parent);
@@ -43,6 +47,7 @@ export class TimeTracker extends foObject implements ITimeTracker {
         this.timeStepLength = spec.timeStepLength;
         this.timeScale = spec.timeScale;
         this.offsetTime = spec.offsetTime;
+        this.totalSteps = spec.totalSteps;
     }
 
     private _currentTime: number;
@@ -185,6 +190,8 @@ export class GlobalClock extends foObject {
             timeStepLength: 100,
             offsetTime: 0,
             offsetStep: 0,
+            totalSteps: 1000
+            
         })
 
         this.override(properties);

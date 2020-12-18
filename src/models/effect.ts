@@ -1,7 +1,5 @@
 import { foObject } from "foundry/models/foObject.model";
-import { foPage } from "foundry/models/foPage.model";
-import { foShape2D, IfoShape2DProperties } from "foundry/models/foShape2D.model";
-import { rxPubSub } from "./rxPubSub";
+import { IfoShape2DProperties } from "foundry/models/foShape2D.model";
 import { ITimeLine2DProperties, SharedTimer, TimeLine, TimeStep, TimeTracker } from "./timeline";
 
 
@@ -19,9 +17,6 @@ export class EffectStep extends TimeStep {
 
 
 
-
-
-
 export class Effect<T extends EffectStep> extends TimeLine<T> implements ITimeLine2DProperties {
     timeTrack: TimeTracker = new TimeTracker();
     activeStep: T;
@@ -34,7 +29,7 @@ export class Effect<T extends EffectStep> extends TimeLine<T> implements ITimeLi
 
 
     setTimeOffset(step: number, time?: number): Effect<T> {
-        const realtime = time != undefined ? time : SharedTimer.computeTimeOffset(step);
+        const realtime = time !== undefined ? time : SharedTimer.computeTimeOffset(step);
         this.timeTrack.setTimeOffset(step, realtime);
         const block = this.subcomponents.first();
         return this.setX(step * block.width);
