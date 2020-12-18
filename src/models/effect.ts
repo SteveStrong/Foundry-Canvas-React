@@ -33,6 +33,10 @@ export class Effect<T extends EffectStep> extends TimeLine<T> implements ITimeLi
     }
 
 
+    setOffset(step: number, time: number): Effect<T> {
+        this.timeTrack.setOffset(step, time);
+        return this;
+    }
 
     setTimecode(globalTimeCode: number, globalTime: number) {
         this.timeTrack.setTimecode(globalTimeCode, globalTime);

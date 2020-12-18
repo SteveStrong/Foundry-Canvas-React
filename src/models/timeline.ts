@@ -34,6 +34,11 @@ export class TimeTracker extends foObject implements ITimeTracker {
         this.override(properties);
     }
 
+    setOffset(step: number, time: number) {
+        this.offsetStep = step;
+        this.offsetTime = time;
+    }
+
     setSpec(spec: ITimeSpec) {
         this.timeStepLength = spec.timeStepLength;
         this.timeScale = spec.timeScale;
@@ -81,6 +86,10 @@ export class TimeLinePage extends foPage {
         return canvasParams;
     }
 
+    setOffset(step: number, time: number): TimeLinePage {
+        this.timeTrack.setOffset(step, time);
+        return this;
+    }
 
     addEffect(item: Effect<TimeStep>): TimeLinePage {
         item.groupId = this.groupId;
@@ -179,6 +188,11 @@ export class GlobalClock extends foObject {
         })
 
         this.override(properties);
+    }
+
+    setOffset(step: number, time: number): GlobalClock {
+        this.timeTrack.setOffset(step, time);
+        return this;
     }
 
     protected _subcomponents: foCollection<TimeLinePage>;
