@@ -26,7 +26,6 @@ export class LightDesignPage extends foPage {
             if (item.data && item.data) {
                 this.currentEffect = item.data;
                 this.markAsDirty();
-                console.log(item)
                 this.subcomponents.forEach(child => {
                     const lights = child as LightArray<LEDLight>;
                     if (lights.groupId === item.groupId) {
@@ -62,7 +61,7 @@ export class LightDesignPage extends foPage {
 export class LEDLight extends foShape2D {
     color: string = 'blue';
     opacity: number = 0.3;
-    _width: number = 25;
+    _width: number = 50;
     _height: number = 50;
 
     constructor(properties?: IfoShape2DProperties, parent?: foObject) {

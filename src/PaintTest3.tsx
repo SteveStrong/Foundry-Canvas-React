@@ -49,7 +49,6 @@ export const PaintTest3: FunctionComponent<any> = (): ReactElement => {
         title: 'Timeline Canvas',
         draw: (ctx: CanvasRenderingContext2D) => {
             timelinePage.render(ctx);
-            timelinePage.incrementTimecode();
         }
     };
 

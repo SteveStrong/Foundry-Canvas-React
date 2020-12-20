@@ -1,8 +1,3 @@
-
-
-
-
-import { TorusGeometry } from 'three';
 import { foObject } from './foObject.model';
 import { foShape2D, IfoShape2DProperties } from './foShape2D.model';
 

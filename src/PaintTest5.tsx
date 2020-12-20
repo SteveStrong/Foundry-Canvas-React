@@ -12,10 +12,36 @@ import { Tools } from 'foundry/models/foTools';
 import { ColorTranslator } from 'colortranslator';
 import { TimeLinePage, TimeStep } from 'models/timeline';
 import { Effect } from 'models/effect';
+import { WaveDesignPage, WaveShape } from 'models/wave';
+import { WalkerDesignPage } from 'models/walker';
 
-export const PaintTest4: FunctionComponent<any> = (): ReactElement => {
+// https://github.com/Microsoft/TypeScript/wiki/Using-the-Compiler-API
+
+export const PaintTest5: FunctionComponent<any> = (): ReactElement => {
     const sourceLED = new LEDLight();
     const sourceStep = new TimeStep();
+
+    const wavePage = new WaveDesignPage({
+        opacity: 0.02,
+        color: 'white',
+        width: 800,
+        height: 400
+    });
+
+    const wave = new WaveShape({
+        x: wavePage.width / 2,
+        y: wavePage.height / 2,
+        width: 800,
+        height: 400
+    });
+    wavePage.addWave(wave);
+
+    const walkerPage = new WalkerDesignPage({
+        opacity: 0.02,
+        color: 'white',
+        width: 1600,
+        height: 200
+    });
 
     const timelinePage = new TimeLinePage({
         opacity: 0.02,
@@ -42,13 +68,11 @@ export const PaintTest4: FunctionComponent<any> = (): ReactElement => {
 
     const Effect5 = EffectStamp(55, 5, { color: 'cyan' });
 
-
     timelinePage.addEffect(Effect1);
     timelinePage.addEffect(Effect2);
     timelinePage.addEffect(Effect3);
     timelinePage.addEffect(Effect4);
     timelinePage.addEffect(Effect5);
-    
 
     const timelineCanvasParams = {
         width: timelinePage.width,
@@ -118,10 +142,30 @@ export const PaintTest4: FunctionComponent<any> = (): ReactElement => {
         }
     };
 
+    const waveCanvasParams = {
+        width: wavePage.width,
+        height: wavePage.height,
+        title: 'Wave Designer Canvas',
+        draw: (ctx: CanvasRenderingContext2D) => {
+            wavePage.render(ctx);
+        }
+    };
+
+    const walkerCanvasParams = {
+        width: walkerPage.width,
+        height: walkerPage.height,
+        title: 'Waker Designer Canvas',
+        draw: (ctx: CanvasRenderingContext2D) => {
+            walkerPage.render(ctx);
+        }
+    };
+
     return (
         <div>
-            <Canvas {...timelineCanvasParams} />
+            <Canvas {...walkerCanvasParams} />
             <Canvas {...lightCanvasParams} />
+            <Canvas {...timelineCanvasParams} />
+            <Canvas {...waveCanvasParams} />
         </div>
     );
 };
