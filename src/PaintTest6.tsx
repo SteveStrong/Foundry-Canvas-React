@@ -10,10 +10,12 @@ import { ColorArray, LEDLight, LightArray, LightDesignPage } from 'models/lights
 import { ToJSON } from 'core/foRenderer';
 import { Tools } from 'foundry/models/foTools';
 import { ColorTranslator } from 'colortranslator';
-import { SharedTimer, TimeLinePage, TimeStep } from 'models/timeline';
+import { TimeLinePage, TimeStep } from 'models/timeline';
 import { Effect } from 'models/effect';
 import { WaveDesignPage, WaveShape } from 'models/wave';
 import { WalkerDesignPage } from 'models/walker';
+import { SharedTimer } from 'models/globalClock';
+import { ClockFace } from 'ClockFace';
 
 // https://github.com/Microsoft/TypeScript/wiki/Using-the-Compiler-API
 
@@ -54,6 +56,7 @@ export const PaintTest6: FunctionComponent<any> = (): ReactElement => {
             gridSizeY: sourceStep.height,
             ...props
         });
+
     };
 
     const Group1 = TimeLineGroupStamp(1);
@@ -73,7 +76,7 @@ export const PaintTest6: FunctionComponent<any> = (): ReactElement => {
         }).horizontal(TimeStep, props);
     };
 
-    const Effect1 = EffectStamp(30, { color: 'orange' }).setTimeOffset(10);
+    const Effect1 = EffectStamp(6, { color: 'orange' }).setTimeOffset(10);
     const Effect2 = EffectStamp(40, { color: 'green' }).followEffect(Effect1);
     const Effect3 = EffectStamp(40, { color: 'yellow' }).followEffect(Effect2);
     const Effect4 = EffectStamp(40, { color: 'red' }).followEffect(Effect3);
@@ -84,10 +87,10 @@ export const PaintTest6: FunctionComponent<any> = (): ReactElement => {
     Effect5.setTimeOffset(target);
 
     Group1.addEffect(Effect1);
-    Group1.addEffect(Effect2);
-    Group2.addEffect(Effect3);
-    Group3.addEffect(Effect4);
-    Group4.addEffect(Effect5);
+    // Group1.addEffect(Effect2);
+    // Group2.addEffect(Effect3);
+    // Group3.addEffect(Effect4);
+    // Group4.addEffect(Effect5);
 
     const lightPage = new LightDesignPage({
         opacity: 1.0,
@@ -158,6 +161,7 @@ export const PaintTest6: FunctionComponent<any> = (): ReactElement => {
         <div>
             <Canvas {...walkerCanvasParams} />
             <Canvas {...lightCanvasParams} />
+            <ClockFace  />
             <Canvas {...Group1.canvasParams()} />
             <Canvas {...Group2.canvasParams()} />
             <Canvas {...Group3.canvasParams()} />
