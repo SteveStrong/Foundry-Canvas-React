@@ -23,6 +23,12 @@ export const PaintTest6: FunctionComponent<any> = (): ReactElement => {
     const sourceLED = new LEDLight();
     const sourceStep = new TimeStep();
 
+    SharedTimer.setSpec({
+        timeScale: 10,
+        startStep: 0,
+        totalSteps: 150
+    }).timeTrigger = 100;
+
     const wavePage = new WaveDesignPage({
         opacity: 0.02,
         color: 'white',
@@ -45,10 +51,11 @@ export const PaintTest6: FunctionComponent<any> = (): ReactElement => {
         height: 200
     });
 
-    const groupSteps = 160;
+    const groupSteps = SharedTimer.timeTrack.totalSteps;
     const TimeLineGroupStamp = (groupId: number, rows: number = 2, props?: any) => {
         return new TimeLinePage({
             color: 'white',
+            stepWidth: sourceStep.width,
             groupId: groupId,
             width: groupSteps * sourceStep.width,
             height: rows * sourceStep.height,
@@ -76,21 +83,20 @@ export const PaintTest6: FunctionComponent<any> = (): ReactElement => {
         }).horizontal(TimeStep, props);
     };
 
-    const Effect1 = EffectStamp(6, { color: 'orange' }).setTimeOffset(10);
-    const Effect2 = EffectStamp(40, { color: 'green' }).followEffect(Effect1);
-    const Effect3 = EffectStamp(40, { color: 'yellow' }).followEffect(Effect2);
-    const Effect4 = EffectStamp(40, { color: 'red' }).followEffect(Effect3);
+    const Effect1 = EffectStamp(30, { color: 'orange' }).setStepOffset(10);
+    const Effect2 = EffectStamp(20, { color: 'green' }).followEffect(Effect1);
+    const Effect3 = EffectStamp(20, { color: 'yellow' }).followEffect(Effect2);
+    const Effect4 = EffectStamp(20, { color: 'red' }).followEffect(Effect3);
 
     const Effect5 = EffectStamp(55, { color: 'blue' });
     const target = 50;
-    //Effect5.setX(size * target).setTimeOffset(target, SharedTimer.computeTimeOffset(target));;
-    Effect5.setTimeOffset(target);
+    Effect5.setStepOffset(target);
 
     Group1.addEffect(Effect1);
-    // Group1.addEffect(Effect2);
-    // Group2.addEffect(Effect3);
-    // Group3.addEffect(Effect4);
-    // Group4.addEffect(Effect5);
+    Group1.addEffect(Effect2);
+    Group2.addEffect(Effect3);
+    Group3.addEffect(Effect4);
+    Group4.addEffect(Effect5);
 
     const lightPage = new LightDesignPage({
         opacity: 1.0,

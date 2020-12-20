@@ -34,7 +34,7 @@ export class Effect<T extends EffectStep> extends TimeLine<T> implements ITimeLi
         return this;
     }
 
-    setTimeOffset(step: number): Effect<T> {
+    setStepOffset(step: number): Effect<T> {
          this.timeTrack.setSpec({
             timeScale: SharedTimer.timeTrack.timeScale,
             startStep: step,
@@ -46,28 +46,19 @@ export class Effect<T extends EffectStep> extends TimeLine<T> implements ITimeLi
 
     setTimecode(globalStep: number, globalTime: number) {
         this.timeTrack.setTimecode(globalStep, globalTime);
+        this.isSelected = this.timeTrack.isWithinBoundary;
     }
 
-    endTimeStep() {
-        return this.timeTrack.startStep + this.subcomponents.length;
+    get endStep() {
+        return this.timeTrack.endStep;
     }
 
 
     followEffect(source: Effect<T>): Effect<T> {
-        return this.setTimeOffset(source.endTimeStep());
+        return this.setStepOffset(source.endStep);
     }
 
     public drawLabel = (ctx: CanvasRenderingContext2D): void => {
-        let bound = this.timeTrack.isWithinBoundary;
-        if (!bound) return;
-
-        if (this.timeTrack.currentStep() < 0) {
-            return;
-        }
-
-        if (this.timeTrack.currentStep() > this.timeTrack.endStep ) {
-            return;
-        }
 
         ctx.save();
         ctx.fillStyle = 'black';
@@ -80,18 +71,18 @@ export class Effect<T extends EffectStep> extends TimeLine<T> implements ITimeLi
         ctx.font = '20px serif';
 
 
-        this.drawText(ctx, `eff: ${bound} ${this.timeTrack.startStep}=>${this.timeTrack.currentStep()}=>${this.timeTrack.endStep}`, x, y);
+        this.drawText(ctx, `${this.timeTrack.startStep}=>${this.timeTrack.currentStep()}=>${this.timeTrack.endStep}`, x, y);
 
         ctx.restore();
     }
 
-    public draw = (ctx: CanvasRenderingContext2D): void => {
+    // public draw = (ctx: CanvasRenderingContext2D): void => {
 
-        ctx.save();
+    //     ctx.save();
 
-        this.drawLabel(ctx);
+    //     this.drawLabel(ctx);
 
-        ctx.restore();
-    }
+    //     ctx.restore();
+    // }
 }
 

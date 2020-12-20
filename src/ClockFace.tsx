@@ -27,7 +27,8 @@ export class ClockFacePage extends foPage {
         let timeTrack: TimeTracker = SharedTimer.timeTrack;
 
         ctx.font = '30px serif';
-        let text = `${id} ${timeTrack.startStep}[${timeTrack.currentStep()}]${timeTrack.endStep}`;
+        let text = `${id} ${timeTrack.timeScale} every ${SharedTimer.timeTrigger} ms ::`;
+        text += `${timeTrack.startStep}[${timeTrack.currentStep()}]${timeTrack.endStep}`;
         text += ` => ${timeTrack.startTime}[${timeTrack.currentTime()}]${timeTrack.endTime}`;
         ctx.fillText(text, x, y);
 

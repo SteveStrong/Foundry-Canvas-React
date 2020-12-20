@@ -37,10 +37,11 @@ export class TimeTracker extends foObject implements ITimeTracker {
     }
 
 
-    setSpec(spec: ITimeSpec) {
+    setSpec(spec: ITimeSpec): TimeTracker {
         this.timeScale = spec.timeScale;
         this.startStep = spec.startStep;
         this.totalSteps = spec.totalSteps;
+        return this;
     }
 
     get startTime(): number {
@@ -84,6 +85,7 @@ export class TimeTracker extends foObject implements ITimeTracker {
 
 export class TimeLinePage extends foPage {
     groupId: number = 0;
+    stepWidth: number = 1;
     timeTrack: TimeTracker = new TimeTracker();
 
     constructor(properties?: IfoShape2DProperties, parent?: foObject) {
@@ -129,7 +131,7 @@ export class TimeLinePage extends foPage {
         const bottom = top + height;
 
         //draw vertical...
-        let x = this.timeTrack.currentTime();
+        let x = this.timeTrack.currentStep() * this.stepWidth;
         ctx.moveTo(x, top);
         ctx.lineTo(x, bottom);
 
@@ -156,7 +158,7 @@ export class TimeLinePage extends foPage {
     public draw = (ctx: CanvasRenderingContext2D): void => {
         this.drawGrid(ctx);
         //this.drawPage(ctx);
-        this.drawLabel(ctx);
+        //this.drawLabel(ctx);
         this.drawTimecode(ctx);
     }
 

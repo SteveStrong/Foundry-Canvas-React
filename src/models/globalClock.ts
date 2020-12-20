@@ -10,32 +10,37 @@ import { TimeTracker, TimeLinePage, ITimeSpec } from "./timeline";
 
 export class GlobalClock extends foObject {
     _timer: any = undefined;
-    _timeTrigger: number = 50;
     timeTrack: TimeTracker = new TimeTracker();
-
+    
     timeCode: number = 0;
-
+    
     constructor(properties?: any, parent?: foObject) {
         super(properties, parent);
-
+        
         this.setSpec({
             timeScale: 10,
             startStep: 0,
             totalSteps: 100
         })
-
+        
         this.override(properties);
     }
+    
+    _timeTrigger: number = 500;
+    get timeTrigger(): number {
+        return this._timeTrigger;
+    }
+    set timeTrigger(value: number) {
+        this._timeTrigger = value;
+        if (this._timer) {
+            this.stop().start();
+        }
+    }
 
-    setSpec(spec: ITimeSpec) {
+    setSpec(spec: ITimeSpec):GlobalClock {
         this.timeTrack.setSpec(spec);
+        return this;
     }
-
-
-    computeTimeOffset(step: number) {
-        return this.timeTrack.timeScale * step;
-    }
-
 
 
     protected _subcomponents: foCollection<TimeLinePage>;
@@ -85,10 +90,11 @@ export class GlobalClock extends foObject {
         return this;
     }
 
-    stop() {
+    stop(): GlobalClock {
         this._timer && clearTimeout(this._timer);
         this._timer = undefined;
         this.markAsClean();
+        return this;
     }
 }
 
