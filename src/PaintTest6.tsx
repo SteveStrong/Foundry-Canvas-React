@@ -6,10 +6,7 @@
 import { Canvas } from 'Canvas';
 
 import React, { FunctionComponent, ReactElement } from 'react';
-import { ColorArray, LEDLight, LightArray, LightDesignPage } from 'models/lights';
-import { ToJSON } from 'core/foRenderer';
-import { Tools } from 'foundry/models/foTools';
-import { ColorTranslator } from 'colortranslator';
+import { LEDLight, LightArray, LightDesignPage } from 'models/lights';
 import { TimeLinePage, TimeStep } from 'models/timeline';
 import { Effect } from 'models/effect';
 import { WaveDesignPage, WaveShape } from 'models/wave';

@@ -1,11 +1,7 @@
-import { foCollection } from "foundry/models/foCollection.model";
 import { foObject } from "foundry/models/foObject.model";
 import { foPage } from "foundry/models/foPage.model";
 import { foShape2D, IfoShape2DProperties } from "foundry/models/foShape2D.model";
-import { Tools } from "foundry/models/foTools";
 import { Effect } from "./effect";
-import { SharedTimer } from "./globalClock";
-import { rxPubSub } from "./rxPubSub";
 
 export interface ITimeSpec {
     timeScale: number;
@@ -124,9 +120,7 @@ export class TimeLinePage extends foPage {
         ctx.strokeStyle = 'black';
         ctx.lineWidth = 10;
 
-        const left = this.marginX - this.x;
         const top = this.marginY - this.y;
-        const width = this.width / this.scaleX;
         const height = this.height / this.scaleY;
         const bottom = top + height;
 
@@ -172,7 +166,6 @@ export class TimeLinePage extends foPage {
         });
 
         this._subcomponents?.forEach(item => {
-            const step = item as Effect<TimeStep>;
 
             //console.log(step.activeStep.color, this.timeCode, this._subcomponents.length)
             //only broadcase if the value change for active step

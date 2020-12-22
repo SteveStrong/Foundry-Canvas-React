@@ -293,7 +293,7 @@ export class foGlyph2D extends foObject implements IfoGlyph2DProperties {
 
   getGlobalMatrix() {
     const mtx = new Matrix2D(this.getMatrix());
-    const parent = this.myParent && <foGlyph2D>this.myParent();
+    const parent:foGlyph2D = this.myParent && this.myParent() as foGlyph2D;
     if (parent) {
       mtx.prependMatrix(parent.getGlobalMatrix());
     }

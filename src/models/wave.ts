@@ -1,17 +1,9 @@
 import { foObject } from "foundry/models/foObject.model";
 import { foPage } from "foundry/models/foPage.model";
 import { foShape2D, IfoShape2DProperties } from "foundry/models/foShape2D.model";
-import { single } from "rxjs/operators";
-import { rxPubSub } from "./rxPubSub";
-import { ITimeLine2DProperties, TimeLine, TimeStep } from "./timeline";
 
 
 
-enum WaveType {
-    SIN,
-    SQUARE,
-    RAMP,
-}
 
 export class Wave extends foObject {
     cycles: number = 1; // 1 means the full length,  2 means 1/2 for first cycle
