@@ -2,6 +2,7 @@ import { foObject } from "foundry/models/foObject.model";
 import { foPage } from "foundry/models/foPage.model";
 import { foShape2D, IfoShape2DProperties } from "foundry/models/foShape2D.model";
 import { Effect } from "./effect";
+import { rxPubSub, rxPubSubClass } from "./rxPubSub";
 
 export interface ITimeSpec {
     timeScale: number;
@@ -67,7 +68,7 @@ export class TimeTracker extends foObject implements ITimeTracker {
         return this._currentStep;
     }
 
-    setTimecode(globalStep: number, globalTime: number) {
+    setTimecode(globalStep: number, globalTime: number):TimeTracker {
         this._currentStep = globalStep - this.startStep;
         this._currentTime = globalTime - this.startTime;
 
@@ -75,7 +76,7 @@ export class TimeTracker extends foObject implements ITimeTracker {
         if (this._currentStep > 0 && this._currentStep < this.totalSteps) {
             this._isWithinBoundary = true;
         }
-
+        return this;
     }
 }
 
@@ -83,6 +84,7 @@ export class TimeLinePage extends foPage {
     groupId: number = 0;
     stepWidth: number = 1;
     timeTrack: TimeTracker = new TimeTracker();
+    pubsub: rxPubSubClass = new rxPubSubClass();
 
     constructor(properties?: IfoShape2DProperties, parent?: foObject) {
         super(properties, parent);
@@ -157,26 +159,20 @@ export class TimeLinePage extends foPage {
     }
 
 
-    setTimecode(globalStep: number, globalTime: number) {
+    setTimecode(globalStep: number, globalTime: number):foPage {
         this.timeTrack.setTimecode(globalStep, globalTime)
 
         this._subcomponents?.forEach(item => {
             const step = item as Effect<TimeStep>;
             step.setTimecode(globalStep, globalTime);
+            if ( step.isSelected ){
+                this.pubsub.broadcast({
+                    groupId: this.groupId,
+                    data: step.activeStep()
+                })
+            }
         });
 
-        this._subcomponents?.forEach(item => {
-
-            //console.log(step.activeStep.color, this.timeCode, this._subcomponents.length)
-            //only broadcase if the value change for active step
-            //including NO active step
-
-            // rxPubSub.broadcast({
-            //     groupId: this.groupId,
-            //     data: step.activeStep
-            // })
-
-        })
         return this.markAsDirty();
     }
 }

@@ -57,8 +57,7 @@ export class GlobalClock extends foObject {
         this.timeTrack.setTimecode(globalStep, globalTime);
 
         this.subcomponents.forEach(item => {
-            item.setTimecode(globalStep, globalTime);
-            item.markAsDirty();
+            item.setTimecode(globalStep, globalTime).markAsDirty();
         });
     }
 

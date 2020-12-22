@@ -7,7 +7,7 @@ export interface Message {
     data: any;
 }
 
-class rxPubSubClass {
+export class rxPubSubClass {
     private _subject = new Subject<Message>();
 
     hub$(): Subject<Message> {

@@ -115,7 +115,7 @@ export const PaintTest6: FunctionComponent<any> = (): ReactElement => {
 
 
 
-    const LEDString1 = LEDStringStamp(25, 1);
+    const LEDString1 = LEDStringStamp(25, 1).setSource(Group1);
     const LEDString2 = LEDStringStamp(25, 2);
     const LEDString3 = LEDStringStamp(25, 3);
     const LEDString4 = LEDStringStamp(25, 4);
