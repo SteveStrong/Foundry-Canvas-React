@@ -4,7 +4,7 @@ import { Tools } from './foTools';
 
 // https://github.com/ReactiveX/rxjs/blob/master/docs_app/content/guide/v6/migration.md
 import { Observable, Subject } from 'rxjs';
-import { debounceTime, filter } from 'rxjs/operators';
+import { debounceTime } from 'rxjs/operators';
 
 let counter = 0;
 export enum LifecycleEventTypes {

@@ -20,7 +20,6 @@ export class EffectStep extends TimeStep {
 
 export class Effect<T extends EffectStep> extends TimeLine<T> implements ITimeLine2DProperties {
     timeTrack: TimeTracker = new TimeTracker();
-    activeStep: T;
 
     constructor(properties?: ITimeLine2DProperties, parent?: foObject) {
         super(properties, parent);
@@ -35,7 +34,7 @@ export class Effect<T extends EffectStep> extends TimeLine<T> implements ITimeLi
     }
 
     setStepOffset(step: number): Effect<T> {
-         this.timeTrack.setSpec({
+        this.timeTrack.setSpec({
             timeScale: SharedTimer.timeTrack.timeScale,
             startStep: step,
             totalSteps: this.total
@@ -44,9 +43,17 @@ export class Effect<T extends EffectStep> extends TimeLine<T> implements ITimeLi
         return this.setX(step * block.width);
     }
 
-    setTimecode(globalStep: number, globalTime: number) {
+    setTimecode(globalStep: number, globalTime: number): Effect<T> {
         this.timeTrack.setTimecode(globalStep, globalTime);
         this.isSelected = this.timeTrack.isWithinBoundary;
+        return this;
+    }
+
+    activeStep(): T {
+        if ( this.isSelected ) {
+            const id = this.timeTrack.currentStep();
+            return this.subcomponents.getChildAt(id) as T;
+        }
     }
 
     get endStep() {

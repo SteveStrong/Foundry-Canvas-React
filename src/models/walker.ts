@@ -2,10 +2,7 @@
 
 import { foObject } from "foundry/models/foObject.model";
 import { foPage } from "foundry/models/foPage.model";
-import { foShape2D, IfoShape2DProperties } from "foundry/models/foShape2D.model";
-import { single } from "rxjs/operators";
-import { rxPubSub } from "./rxPubSub";
-import { ITimeLine2DProperties, TimeLine, TimeStep } from "./timeline";
+import { foShape2D } from "foundry/models/foShape2D.model";
 
 
 export class Walker extends foObject {

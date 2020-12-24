@@ -1,10 +1,5 @@
 import { foCollection } from "foundry/models/foCollection.model";
 import { foObject } from "foundry/models/foObject.model";
-import { foPage } from "foundry/models/foPage.model";
-import { foShape2D, IfoShape2DProperties } from "foundry/models/foShape2D.model";
-import { Tools } from "foundry/models/foTools";
-import { Effect } from "./effect";
-import { rxPubSub } from "./rxPubSub";
 import { TimeTracker, TimeLinePage, ITimeSpec } from "./timeline";
 
 
@@ -62,8 +57,7 @@ export class GlobalClock extends foObject {
         this.timeTrack.setTimecode(globalStep, globalTime);
 
         this.subcomponents.forEach(item => {
-            item.setTimecode(globalStep, globalTime);
-            item.markAsDirty();
+            item.setTimecode(globalStep, globalTime).markAsDirty();
         });
     }
 

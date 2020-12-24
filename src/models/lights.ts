@@ -3,6 +3,7 @@ import { foPage } from "foundry/models/foPage.model";
 import { foShape2D, IfoShape2DProperties } from "foundry/models/foShape2D.model";
 import { EffectStep } from "./effect";
 import { rxPubSub } from "./rxPubSub";
+import { TimeLinePage } from "./timeline";
 
 // function create<T>(c: { new(): T }): T {
 //     return new c();
@@ -23,16 +24,8 @@ export class LightDesignPage extends foPage {
         this.setPinLeft().setPinTop();
 
         rxPubSub.hub$().subscribe(item => {
-            if (item.data && item.data) {
-                this.currentEffect = item.data;
-                this.markAsDirty();
-                this.subcomponents.forEach(child => {
-                    const lights = child as LightArray<LEDLight>;
-                    if (lights.groupId === item.groupId) {
-                        lights.applyEffect(this.currentEffect);
-                    }
-                })
-            }
+            this.currentEffect = item.data;
+            this.markAsDirty();
         })
     }
 
@@ -82,6 +75,7 @@ export class LightArray<T extends LEDLight> extends foShape2D implements ILightA
     opacity: number = 0.2;
     total: number;
     groupId: number;
+    source: TimeLinePage;
     private _rebuild: any;
 
 
@@ -96,6 +90,18 @@ export class LightArray<T extends LEDLight> extends foShape2D implements ILightA
         this.subcomponents.forEach(child => {
             child.color = step.color;
         })
+    }
+
+    setSource(obj:TimeLinePage): LightArray<T> {
+        this.source = obj;
+
+        this.source.pubsub.hub$().subscribe(item => {
+            console.log(item);
+            if (item.data) {
+                this.applyEffect(item.data);
+            }
+        })
+        return this;
     }
 
     clear() {

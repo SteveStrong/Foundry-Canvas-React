@@ -6,10 +6,7 @@
 import { Canvas } from 'Canvas';
 
 import React, { FunctionComponent, ReactElement } from 'react';
-import { ColorArray, LEDLight, LightArray, LightDesignPage } from 'models/lights';
-import { ToJSON } from 'core/foRenderer';
-import { Tools } from 'foundry/models/foTools';
-import { ColorTranslator } from 'colortranslator';
+import { LEDLight, LightArray, LightDesignPage } from 'models/lights';
 import { TimeLinePage, TimeStep } from 'models/timeline';
 import { Effect } from 'models/effect';
 import { WaveDesignPage, WaveShape } from 'models/wave';
@@ -118,7 +115,7 @@ export const PaintTest6: FunctionComponent<any> = (): ReactElement => {
 
 
 
-    const LEDString1 = LEDStringStamp(25, 1);
+    const LEDString1 = LEDStringStamp(25, 1).setSource(Group1);
     const LEDString2 = LEDStringStamp(25, 2);
     const LEDString3 = LEDStringStamp(25, 3);
     const LEDString4 = LEDStringStamp(25, 4);

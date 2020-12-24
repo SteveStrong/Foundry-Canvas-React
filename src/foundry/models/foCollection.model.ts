@@ -1,4 +1,3 @@
-import { Tools } from './foTools';
 import { foObject } from './foObject.model';
 import { iObject, Action, Func } from './foInterface';
 

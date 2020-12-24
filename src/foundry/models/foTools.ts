@@ -22,7 +22,7 @@ export class foTools {
   // Speed up calls to hasOwnProperty
   private hasOwnProperty = Object.prototype.hasOwnProperty;
 
-  constructor() {}
+  //constructor() {}
 
   /**
    * http://stackoverflow.com/questions/6588977/how-to-to-extract-a-javascript-function-from-a-javascript-file

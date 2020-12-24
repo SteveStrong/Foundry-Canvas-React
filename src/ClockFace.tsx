@@ -3,7 +3,6 @@ import { useCanvas2D } from 'CanvasHook';
 import { TimeTracker } from 'models/timeline';
 import React, { Fragment, FunctionComponent, ReactElement } from 'react';
 import { SharedTimer } from 'models/globalClock';
-import { ToJSON } from './core/foRenderer';
 import { foPage } from 'foundry/models/foPage.model';
 import { foObject } from 'foundry/models/foObject.model';
 
