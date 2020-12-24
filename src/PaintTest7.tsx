@@ -27,27 +27,7 @@ export const PaintTest7: FunctionComponent<any> = (): ReactElement => {
         totalSteps: 150
     }).timeTrigger = 100;
 
-    const wavePage = new WaveDesignPage({
-        opacity: 0.02,
-        color: 'white',
-        width: 800,
-        height: 400
-    });
 
-    const wave = new WaveShape({
-        x: wavePage.width / 2,
-        y: wavePage.height / 2,
-        width: 800,
-        height: 400
-    });
-    wavePage.addWave(wave);
-
-    const walkerPage = new WalkerDesignPage({
-        opacity: 0.02,
-        color: 'white',
-        width: 1600,
-        height: 200
-    });
 
     const groupSteps = SharedTimer.timeTrack.totalSteps;
     const TimeLineGroupStamp = (groupId: number, rows: number = 2, props?: any) => {
@@ -65,13 +45,13 @@ export const PaintTest7: FunctionComponent<any> = (): ReactElement => {
     };
 
     const Group1 = TimeLineGroupStamp(1);
-    const Group2 = TimeLineGroupStamp(2);
-    const Group3 = TimeLineGroupStamp(3);
-    const Group4 = TimeLineGroupStamp(4);
-    SharedTimer.addTimeLinePage(Group1)
-        .addTimeLinePage(Group2)
-        .addTimeLinePage(Group3)
-        .addTimeLinePage(Group4);
+    //const Group2 = TimeLineGroupStamp(2);
+    //const Group3 = TimeLineGroupStamp(3);
+    //const Group4 = TimeLineGroupStamp(4);
+    SharedTimer.addTimeLinePage(Group1);
+        // .addTimeLinePage(Group2)
+        // .addTimeLinePage(Group3)
+        // .addTimeLinePage(Group4);
 
     const EffectStamp = (name: string, size: number = 20, props?: any) => {
         return new Effect({
@@ -120,7 +100,7 @@ export const PaintTest7: FunctionComponent<any> = (): ReactElement => {
 
 
 
-    const LEDString1 = LEDStringStamp(25, 1).setSource(Group1);
+    const LEDString1 = LEDStringStamp(25, 1); //.setSource(Group1);
     const LEDString2 = LEDStringStamp(25, 2);
     const LEDString3 = LEDStringStamp(25, 3);
     const LEDString4 = LEDStringStamp(25, 4);
@@ -151,9 +131,9 @@ export const PaintTest7: FunctionComponent<any> = (): ReactElement => {
             <Canvas {...lightCanvasParams} />
             <ClockFace />
             <Canvas {...Group1.canvasParams()} />
-            <Canvas {...Group2.canvasParams()} />
+            {/* <Canvas {...Group2.canvasParams()} />
             <Canvas {...Group3.canvasParams()} />
-            <Canvas {...Group4.canvasParams()} />
+            <Canvas {...Group4.canvasParams()} /> */}
             <ToJSON {...program} />
         </div>
     );

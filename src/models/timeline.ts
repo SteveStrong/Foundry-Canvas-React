@@ -81,10 +81,7 @@ export class TimeTracker extends foObject implements ITimeTracker {
 
     isStepInZone(globalStep: number){
         const start = globalStep - this.startStep;
-        if (start >= 0 && start < this.totalSteps) {
-            return true;
-        }
-        return false;
+        return start >= 0 && start <= this.totalSteps;
     }
 
     setTimecode(globalStep: number, globalTime: number):TimeTracker {
@@ -92,7 +89,7 @@ export class TimeTracker extends foObject implements ITimeTracker {
         this._currentTime = globalTime - this.startTime;
 
         this._isWithinBoundary = false;
-        if (this._currentStep > 0 && this._currentStep < this.totalSteps) {
+        if (this._currentStep >= 0 && this._currentStep <= this.totalSteps) {
             this._isWithinBoundary = true;
         }
         return this;
@@ -128,13 +125,16 @@ export class TimeLinePage extends foPage {
 
 
     addEffect(item: Effect<TimeStep>): TimeLinePage {
-        item.groupId = this.groupId;
-        this.subcomponents.addMember(item);
-        this.markAsDirty();
+        if ( !this.subcomponents.isMember(item)) {
+            item.groupId = this.groupId;
+            this.subcomponents.addMember(item);
+            this.markAsDirty();
+        }
         return this;
     }
 
     compileTimeline(manager: ProgramManager, globalStep: number) {
+        const total = this.subcomponents.length;
         this.subcomponents.forEach(item => {
             const effect:Effect<TimeStep> = item as Effect<TimeStep>;
             effect.compileTimeline(manager, globalStep);

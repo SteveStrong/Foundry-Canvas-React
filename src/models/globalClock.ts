@@ -50,16 +50,22 @@ export class GlobalClock extends foObject {
     }
 
     addTimeLinePage(item: TimeLinePage): GlobalClock {
-        item.timeTrack.setSpec(this.timeTrack);
-        this.subcomponents.addMember(item);
-        item.markAsDirty();
+        if ( !this.subcomponents.isMember(item)) {
+            item.timeTrack.setSpec(this.timeTrack);
+            this.subcomponents.addMember(item);
+            item.markAsDirty();
+        }
         return this;
     }
 
     compileTimeline(): ProgramManager {
         const manager = new ProgramManager();
         for (let step = 0; step < this.timeTrack.totalSteps; step++) {
+            const total =  this.subcomponents.length;
+            // const first = this.subcomponents.first();
+            // first.compileTimeline(manager, step);
             this.subcomponents.forEach(item => {
+                const group = item.groupId;
                 item.compileTimeline(manager, step);
             })
         }
