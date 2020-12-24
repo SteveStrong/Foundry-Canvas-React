@@ -94,11 +94,11 @@ export const PaintTest7: FunctionComponent<any> = (): ReactElement => {
     Effect5.setStepOffset(target);
 
     Group1.addEffect(Effect0);
-    Group1.addEffect(Effect1);
-    Group1.addEffect(Effect2);
-    Group2.addEffect(Effect3);
-    Group3.addEffect(Effect4);
-    Group4.addEffect(Effect5);
+    // Group1.addEffect(Effect1);
+    // Group1.addEffect(Effect2);
+    // Group2.addEffect(Effect3);
+    // Group3.addEffect(Effect4);
+    // Group4.addEffect(Effect5);
 
     const lightPage = new LightDesignPage({
         opacity: 1.0,

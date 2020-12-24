@@ -1,13 +1,13 @@
 import { foObject } from "foundry/models/foObject.model";
 
 export enum Operation {
-    ON,
-    OFF,
-    RUN,
-    STOP,
-    SHOW,
-    HIDE,
-    EXECUTE
+    ON = 'ON',
+    OFF = 'OFF',
+    RUN = 'RUN',
+    STOP = 'STOP',
+    SHOW = 'SHOW',
+    HIDE = 'HIDE',
+    EXECUTE = 'EXE'
 }
 
 export class Instruction {
@@ -30,6 +30,8 @@ export class Program {
     addStep(id: number, obj: Instruction): Program {
         if (!this.steps[id]) {
             this.steps[id] = [];
+        } else {
+            obj.op = Operation.STOP;
         }
         this.steps[id].push(obj);
         return this;

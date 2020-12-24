@@ -3,23 +3,8 @@ import { foObject } from "foundry/models/foObject.model";
 import { ProgramManager } from "./program";
 import { TimeTracker, TimeLinePage, ITimeSpec } from "./timeline";
 
-export class Instruction {
-}
 
-export interface IProgram {
-    [step: number]: Instruction[];
-}
 
-export class GlobalProgram extends foObject {
-    programSteps: IProgram;
-
-    constructor(properties?: any, parent?: foObject) {
-        super(properties, parent);
-
-        this.override(properties);
-    }
-
-}
 
 export class GlobalClock extends foObject {
     _timer: any = undefined;
@@ -73,7 +58,7 @@ export class GlobalClock extends foObject {
 
     compileTimeline(): ProgramManager {
         const manager = new ProgramManager();
-        for(let step=0; step<this.timeTrack.totalSteps; step++) {
+        for (let step = 0; step < this.timeTrack.totalSteps; step++) {
             this.subcomponents.forEach(item => {
                 item.compileTimeline(manager, step);
             })

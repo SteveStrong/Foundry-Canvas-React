@@ -46,17 +46,22 @@ export class Effect<T extends EffectStep> extends TimeLine<T> implements ITimeLi
 
     compileTimeline(manager: ProgramManager, globalStep: number) {
         if ( this.timeTrack.doesStepStartZone(globalStep) ) {
+
+            const first = this.subcomponents.first();
             manager.addStep(globalStep, new Instruction(
                 Operation.ON,
-                { begin: globalStep, myName: this.myName}
+                { begin: globalStep, myName: this.myName, groupid: this.groupId, color: first.color}
             ));
         }
-        if ( this.timeTrack.doesStepEndZone(globalStep) ) {
-            manager.addStep(globalStep, new Instruction(
-                Operation.OFF,
-                { end: globalStep, myName: this.myName}
-            ));
-        }
+
+        // if ( this.timeTrack.doesStepEndZone(globalStep) ) {
+
+        //     const last = this.subcomponents.last();
+        //     manager.addStep(globalStep, new Instruction(
+        //         Operation.OFF,
+        //         { end: globalStep, myName: this.myName, groupid: this.groupId, color: last.color}
+        //     ));
+        // }
 
     }
     
