@@ -170,6 +170,10 @@ export class TimeLinePage extends foPage {
                     groupId: this.groupId,
                     data: step.activeStep()
                 })
+                rxPubSub.broadcast({
+                    groupId: this.groupId,
+                    data: step.activeStep()
+                })
             }
         });
 

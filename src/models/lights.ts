@@ -96,8 +96,9 @@ export class LightArray<T extends LEDLight> extends foShape2D implements ILightA
         this.source = obj;
 
         this.source.pubsub.hub$().subscribe(item => {
+            console.log(item);
             if (item.data) {
-                    this.applyEffect(item.data);
+                this.applyEffect(item.data);
             }
         })
         return this;
