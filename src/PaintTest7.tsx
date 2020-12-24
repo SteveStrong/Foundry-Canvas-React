@@ -124,7 +124,7 @@ export const PaintTest7: FunctionComponent<any> = (): ReactElement => {
     };
 
     const program = SharedTimer.compileTimeline();
-    SharedTimer.start();
+    //SharedTimer.start();
 
     return (
         <div>

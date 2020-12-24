@@ -125,7 +125,7 @@ export class TimeLinePage extends foPage {
 
 
     addEffect(item: Effect<TimeStep>): TimeLinePage {
-        if ( !this.subcomponents.isMember(item)) {
+        if ( !this.subcomponents.isMember(item) && item.myGuid) {  
             item.groupId = this.groupId;
             this.subcomponents.addMember(item);
             this.markAsDirty();
