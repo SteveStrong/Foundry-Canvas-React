@@ -2,6 +2,7 @@ import { foObject } from "foundry/models/foObject.model";
 import { foPage } from "foundry/models/foPage.model";
 import { foShape2D, IfoShape2DProperties } from "foundry/models/foShape2D.model";
 import { Effect } from "./effect";
+import { ProgramManager } from "./program";
 import { rxPubSub, rxPubSubClass } from "./rxPubSub";
 
 export interface ITimeSpec {
@@ -68,6 +69,24 @@ export class TimeTracker extends foObject implements ITimeTracker {
         return this._currentStep;
     }
 
+    doesStepStartZone(globalStep: number){
+        const start = globalStep - this.startStep;
+        return start === 0;
+    }
+
+    doesStepEndZone(globalStep: number){
+        const start = globalStep - this.startStep;
+        return start === this.totalSteps;
+    }
+
+    isStepInZone(globalStep: number){
+        const start = globalStep - this.startStep;
+        if (start >= 0 && start < this.totalSteps) {
+            return true;
+        }
+        return false;
+    }
+
     setTimecode(globalStep: number, globalTime: number):TimeTracker {
         this._currentStep = globalStep - this.startStep;
         this._currentTime = globalTime - this.startTime;
@@ -113,6 +132,13 @@ export class TimeLinePage extends foPage {
         this.subcomponents.addMember(item);
         this.markAsDirty();
         return this;
+    }
+
+    compileTimeline(manager: ProgramManager, globalStep: number) {
+        this.subcomponents.forEach(item => {
+            const effect:Effect<TimeStep> = item as Effect<TimeStep>;
+            effect.compileTimeline(manager, globalStep);
+        })
     }
 
     drawTimecode(ctx: CanvasRenderingContext2D) {

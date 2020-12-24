@@ -1,26 +1,44 @@
 import { foCollection } from "foundry/models/foCollection.model";
 import { foObject } from "foundry/models/foObject.model";
+import { ProgramManager } from "./program";
 import { TimeTracker, TimeLinePage, ITimeSpec } from "./timeline";
 
+export class Instruction {
+}
+
+export interface IProgram {
+    [step: number]: Instruction[];
+}
+
+export class GlobalProgram extends foObject {
+    programSteps: IProgram;
+
+    constructor(properties?: any, parent?: foObject) {
+        super(properties, parent);
+
+        this.override(properties);
+    }
+
+}
 
 export class GlobalClock extends foObject {
     _timer: any = undefined;
+
     timeTrack: TimeTracker = new TimeTracker();
-    
     timeCode: number = 0;
-    
+
     constructor(properties?: any, parent?: foObject) {
         super(properties, parent);
-        
+
         this.setSpec({
             timeScale: 10,
             startStep: 0,
             totalSteps: 100
         })
-        
+
         this.override(properties);
     }
-    
+
     _timeTrigger: number = 500;
     get timeTrigger(): number {
         return this._timeTrigger;
@@ -32,7 +50,7 @@ export class GlobalClock extends foObject {
         }
     }
 
-    setSpec(spec: ITimeSpec):GlobalClock {
+    setSpec(spec: ITimeSpec): GlobalClock {
         this.timeTrack.setSpec(spec);
         return this;
     }
@@ -53,6 +71,16 @@ export class GlobalClock extends foObject {
         return this;
     }
 
+    compileTimeline(): ProgramManager {
+        const manager = new ProgramManager();
+        for(let step=0; step<this.timeTrack.totalSteps; step++) {
+            this.subcomponents.forEach(item => {
+                item.compileTimeline(manager, step);
+            })
+        }
+        return manager;
+    }
+
     notifyComponents(globalStep: number, globalTime: number) {
         this.timeTrack.setTimecode(globalStep, globalTime);
 
@@ -71,7 +99,7 @@ export class GlobalClock extends foObject {
         this._timer = setTimeout(() => {
             if (!!(this._timer && !(this._timer % 2))) {
                 this.timeCode++;
- 
+
                 this.notifyComponents(this.timeCode, this.timeTrack.timeScale * this.timeCode);
 
                 if (this.timeCode === this.timeTrack.totalSteps) {

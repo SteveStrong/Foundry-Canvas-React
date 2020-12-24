@@ -1,6 +1,7 @@
 import { foObject } from "foundry/models/foObject.model";
 import { IfoShape2DProperties } from "foundry/models/foShape2D.model";
 import { SharedTimer } from "./globalClock";
+import { Instruction, Operation, ProgramManager } from "./program";
 import { ITimeLine2DProperties, TimeLine, TimeStep, TimeTracker } from "./timeline";
 
 
@@ -43,6 +44,22 @@ export class Effect<T extends EffectStep> extends TimeLine<T> implements ITimeLi
         return this.setX(step * block.width);
     }
 
+    compileTimeline(manager: ProgramManager, globalStep: number) {
+        if ( this.timeTrack.doesStepStartZone(globalStep) ) {
+            manager.addStep(globalStep, new Instruction(
+                Operation.ON,
+                { begin: globalStep, myName: this.myName}
+            ));
+        }
+        if ( this.timeTrack.doesStepEndZone(globalStep) ) {
+            manager.addStep(globalStep, new Instruction(
+                Operation.OFF,
+                { end: globalStep, myName: this.myName}
+            ));
+        }
+
+    }
+    
     setTimecode(globalStep: number, globalTime: number): Effect<T> {
         this.timeTrack.setTimecode(globalStep, globalTime);
         this.isSelected = this.timeTrack.isWithinBoundary;
