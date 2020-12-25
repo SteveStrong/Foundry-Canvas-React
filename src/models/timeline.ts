@@ -3,7 +3,7 @@ import { foPage } from "foundry/models/foPage.model";
 import { foShape2D, IfoShape2DProperties } from "foundry/models/foShape2D.model";
 import { Effect } from "./effect";
 import { ProgramManager } from "./program";
-import { rxPubSub, rxPubSubClass } from "./rxPubSub";
+import { rxPubSubClass } from "./rxPubSub";
 
 export interface ITimeSpec {
     timeScale: number;

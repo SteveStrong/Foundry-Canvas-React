@@ -1,6 +1,6 @@
 import { foCollection } from "foundry/models/foCollection.model";
 import { foObject } from "foundry/models/foObject.model";
-import { ProgramManager } from "./program";
+import { Instruction, Operation, ProgramManager } from "./program";
 import { TimeTracker, TimeLinePage, ITimeSpec } from "./timeline";
 
 
@@ -67,9 +67,17 @@ export class GlobalClock extends foObject {
 
     compileTimeline(): ProgramManager {
         const manager = new ProgramManager();
+
+        this.subcomponents.forEach(item => {
+            const group = item.groupId;
+            manager.addStep(0, new Instruction(
+                Operation.OFF,
+                { begin: 0, groupid: group }
+            ));
+        });
+
         for (let step = 0; step < this.timeTrack.totalSteps; step++) {
             this.subcomponents.forEach(item => {
-                //const group = item.groupId;
                 item.compileTimeline(manager, step);
             })
         }
