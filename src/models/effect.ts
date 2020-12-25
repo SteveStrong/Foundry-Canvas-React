@@ -54,14 +54,14 @@ export class Effect<T extends EffectStep> extends TimeLine<T> implements ITimeLi
             ));
         }
 
-        // if ( this.timeTrack.doesStepEndZone(globalStep) ) {
-
-        //     const last = this.subcomponents.last();
-        //     manager.addStep(globalStep, new Instruction(
-        //         Operation.OFF,
-        //         { end: globalStep, myName: this.myName, groupid: this.groupId, color: last.color}
-        //     ));
-        // }
+        if ( this.timeTrack.doesStepEndZone(globalStep) ) {
+            const group = this.groupId;
+            const last = this.subcomponents.last();
+            manager.addStep(globalStep, new Instruction(
+                Operation.OFF,
+                { end: globalStep, myName: this.myName, groupid: group, color: last.color}
+            ));
+        }
 
     }
     

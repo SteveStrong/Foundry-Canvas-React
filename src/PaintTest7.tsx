@@ -45,13 +45,14 @@ export const PaintTest7: FunctionComponent<any> = (): ReactElement => {
     };
 
     const Group1 = TimeLineGroupStamp(1);
-    //const Group2 = TimeLineGroupStamp(2);
-    //const Group3 = TimeLineGroupStamp(3);
-    //const Group4 = TimeLineGroupStamp(4);
-    SharedTimer.addTimeLinePage(Group1);
-        // .addTimeLinePage(Group2)
-        // .addTimeLinePage(Group3)
-        // .addTimeLinePage(Group4);
+    const Group2 = TimeLineGroupStamp(2);
+    const Group3 = TimeLineGroupStamp(3);
+    const Group4 = TimeLineGroupStamp(4);
+    SharedTimer.clearSubcomponents()
+        .addTimeLinePage(Group1)
+        .addTimeLinePage(Group2)
+        .addTimeLinePage(Group3)
+        .addTimeLinePage(Group4);
 
     const EffectStamp = (name: string, size: number = 20, props?: any) => {
         return new Effect({
@@ -74,11 +75,11 @@ export const PaintTest7: FunctionComponent<any> = (): ReactElement => {
     Effect5.setStepOffset(target);
 
     Group1.addEffect(Effect0);
-    // Group1.addEffect(Effect1);
-    // Group1.addEffect(Effect2);
-    // Group2.addEffect(Effect3);
-    // Group3.addEffect(Effect4);
-    // Group4.addEffect(Effect5);
+    Group1.addEffect(Effect1);
+    Group1.addEffect(Effect2);
+    Group2.addEffect(Effect3);
+    Group3.addEffect(Effect4);
+    Group4.addEffect(Effect5);
 
     const lightPage = new LightDesignPage({
         opacity: 1.0,

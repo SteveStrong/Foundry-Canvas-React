@@ -30,8 +30,6 @@ export class Program {
     addStep(id: number, obj: Instruction): Program {
         if (!this.steps[id]) {
             this.steps[id] = [];
-        } else {
-            obj.op = Operation.STOP;
         }
         this.steps[id].push(obj);
         return this;

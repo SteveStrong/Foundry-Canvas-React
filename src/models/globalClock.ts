@@ -49,6 +49,13 @@ export class GlobalClock extends foObject {
         return this._subcomponents;
     }
 
+    clearSubcomponents(): GlobalClock {
+        if (this._subcomponents) {
+            this._subcomponents.clearAll();
+        }
+        return this;
+    }
+
     addTimeLinePage(item: TimeLinePage): GlobalClock {
         if ( !this.subcomponents.isMember(item) && item.myGuid) {
             item.timeTrack.setSpec(this.timeTrack);
@@ -60,15 +67,12 @@ export class GlobalClock extends foObject {
 
     compileTimeline(): ProgramManager {
         const manager = new ProgramManager();
-        //for (let step = 0; step < this.timeTrack.totalSteps; step++) {
-            const total =  this.subcomponents.length;
-            const item = this.subcomponents.first();
-            // first.compileTimeline(manager, step);
+        for (let step = 0; step < this.timeTrack.totalSteps; step++) {
             this.subcomponents.forEach(item => {
-                const group = item.groupId;
-                item.compileTimeline(manager, 0);
+                //const group = item.groupId;
+                item.compileTimeline(manager, step);
             })
-        //}
+        }
         return manager;
     }
 

@@ -134,7 +134,7 @@ export class TimeLinePage extends foPage {
     }
 
     compileTimeline(manager: ProgramManager, globalStep: number) {
-        const total = this.subcomponents.length;
+        //const total = this.subcomponents.length;
         this.subcomponents.forEach(item => {
             const effect:Effect<TimeStep> = item as Effect<TimeStep>;
             effect.compileTimeline(manager, globalStep);
