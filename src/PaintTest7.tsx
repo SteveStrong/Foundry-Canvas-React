@@ -17,7 +17,7 @@ import { ToJSON } from 'core/foRenderer';
 
 // https://github.com/Microsoft/TypeScript/wiki/Using-the-Compiler-API
 
-export const PaintTest7: FunctionComponent<any> = (): ReactElement => {
+const solution = () => {
     const sourceLED = new LEDLight();
     const sourceStep = new TimeStep();
 
@@ -26,8 +26,6 @@ export const PaintTest7: FunctionComponent<any> = (): ReactElement => {
         startStep: 0,
         totalSteps: 150
     }).timeTrigger = 100;
-
-
 
     const groupSteps = SharedTimer.timeTrack.totalSteps;
     const TimeLineGroupStamp = (groupId: number, rows: number = 2, props?: any) => {
@@ -41,18 +39,17 @@ export const PaintTest7: FunctionComponent<any> = (): ReactElement => {
             gridSizeY: sourceStep.height,
             ...props
         });
-
     };
 
     const Group1 = TimeLineGroupStamp(1);
     const Group2 = TimeLineGroupStamp(2);
     const Group3 = TimeLineGroupStamp(3);
     const Group4 = TimeLineGroupStamp(4);
-    SharedTimer.clearSubcomponents()
-        .addTimeLinePage(Group1)
-        .addTimeLinePage(Group2)
-        .addTimeLinePage(Group3)
-        .addTimeLinePage(Group4);
+
+    //you need this is react will rerender.
+    //but inside this function we only run it once
+    //SharedTimer.clearSubcomponents();
+    SharedTimer.addTimeLinePage(Group1).addTimeLinePage(Group2).addTimeLinePage(Group3).addTimeLinePage(Group4);
 
     const EffectStamp = (name: string, size: number = 20, props?: any) => {
         return new Effect({
@@ -99,8 +96,6 @@ export const PaintTest7: FunctionComponent<any> = (): ReactElement => {
         }).horizontal(LEDLight, props);
     };
 
-
-
     const LEDString1 = LEDStringStamp(25, 1); //.setSource(Group1);
     const LEDString2 = LEDStringStamp(25, 2);
     const LEDString3 = LEDStringStamp(25, 3);
@@ -125,16 +120,24 @@ export const PaintTest7: FunctionComponent<any> = (): ReactElement => {
     };
 
     const program = SharedTimer.compileTimeline();
-    //SharedTimer.start();
+    return { lightCanvasParams, Group1, Group2, Group3, Group4, program };
+};
 
+const data = solution();
+
+export const PaintTest7: FunctionComponent<any> = (): ReactElement => {
+    
+    const {lightCanvasParams, Group1, Group2, Group3, Group4, program } = data;
+    SharedTimer.start();
+    
     return (
         <div>
             <Canvas {...lightCanvasParams} />
             <ClockFace />
             <Canvas {...Group1.canvasParams()} />
-            {/* <Canvas {...Group2.canvasParams()} />
+            <Canvas {...Group2.canvasParams()} />
             <Canvas {...Group3.canvasParams()} />
-            <Canvas {...Group4.canvasParams()} /> */}
+            <Canvas {...Group4.canvasParams()} />
             <ToJSON {...program} />
         </div>
     );
