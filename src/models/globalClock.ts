@@ -65,22 +65,27 @@ export class GlobalClock extends foObject {
         return this;
     }
 
-    compileTimeline(): ProgramManager {
+    initProgramManager(): ProgramManager {
         const manager = new ProgramManager();
 
         this.subcomponents.forEach(item => {
-            const group = item.groupId;
             manager.addStep(0, new Instruction(
                 Operation.OFF,
-                { begin: 0, groupid: group }
+                { begin: 0, groupid: item.groupId }
             ));
         });
+        return manager;
+    }
+
+    compileTimeline(): ProgramManager {
+        const manager = this.initProgramManager();
 
         for (let step = 0; step < this.timeTrack.totalSteps; step++) {
             this.subcomponents.forEach(item => {
                 item.compileTimeline(manager, step);
             })
         }
+        
         return manager;
     }
 
