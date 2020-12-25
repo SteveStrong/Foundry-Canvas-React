@@ -2,6 +2,7 @@ import { foObject } from "foundry/models/foObject.model";
 import { foPage } from "foundry/models/foPage.model";
 import { foShape2D, IfoShape2DProperties } from "foundry/models/foShape2D.model";
 import { Effect } from "./effect";
+import { ProgramManager } from "./program";
 import { rxPubSub, rxPubSubClass } from "./rxPubSub";
 
 export interface ITimeSpec {
@@ -68,12 +69,27 @@ export class TimeTracker extends foObject implements ITimeTracker {
         return this._currentStep;
     }
 
+    doesStepStartZone(globalStep: number){
+        const start = globalStep - this.startStep;
+        return start === 0;
+    }
+
+    doesStepEndZone(globalStep: number){
+        const start = globalStep - this.startStep;
+        return start === this.totalSteps;
+    }
+
+    isStepInZone(globalStep: number){
+        const start = globalStep - this.startStep;
+        return start >= 0 && start <= this.totalSteps;
+    }
+
     setTimecode(globalStep: number, globalTime: number):TimeTracker {
         this._currentStep = globalStep - this.startStep;
         this._currentTime = globalTime - this.startTime;
 
         this._isWithinBoundary = false;
-        if (this._currentStep > 0 && this._currentStep < this.totalSteps) {
+        if (this._currentStep >= 0 && this._currentStep <= this.totalSteps) {
             this._isWithinBoundary = true;
         }
         return this;
@@ -109,10 +125,20 @@ export class TimeLinePage extends foPage {
 
 
     addEffect(item: Effect<TimeStep>): TimeLinePage {
-        item.groupId = this.groupId;
-        this.subcomponents.addMember(item);
-        this.markAsDirty();
+        if ( !this.subcomponents.isMember(item) && item.myGuid) {  
+            item.groupId = this.groupId;
+            this.subcomponents.addMember(item);
+            this.markAsDirty();
+        }
         return this;
+    }
+
+    compileTimeline(manager: ProgramManager, globalStep: number) {
+        const total = this.subcomponents.length;
+        this.subcomponents.forEach(item => {
+            const effect:Effect<TimeStep> = item as Effect<TimeStep>;
+            effect.compileTimeline(manager, globalStep);
+        })
     }
 
     drawTimecode(ctx: CanvasRenderingContext2D) {
