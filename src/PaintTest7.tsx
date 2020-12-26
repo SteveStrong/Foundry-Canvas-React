@@ -43,11 +43,13 @@ const solution = () => {
     const Group2 = TimeLineGroupStamp(2);
     const Group3 = TimeLineGroupStamp(3);
     const Group4 = TimeLineGroupStamp(4);
+    const Group5 = TimeLineGroupStamp(5);
+    const Group6 = TimeLineGroupStamp(6);
 
     //you need this is react will rerender.
     //but inside this function we only run it once
     //SharedTimer.clearSubcomponents();
-    SharedTimer.addTimeLinePage(Group1).addTimeLinePage(Group2).addTimeLinePage(Group3).addTimeLinePage(Group4);
+    SharedTimer.addTimeLinePage(Group1).addTimeLinePage(Group2).addTimeLinePage(Group3).addTimeLinePage(Group4).addTimeLinePage(Group5).addTimeLinePage(Group6);
 
     const EffectStamp = (name: string, size: number = 20, props?: any) => {
         return new Effect({
@@ -61,9 +63,9 @@ const solution = () => {
     const Effect0 = EffectStamp('E0', 10, { color: 'cyan' });
 
     const Effect1 = EffectStamp('E1', 30, { color: 'orange' }).setStepOffset(10);
-    const Effect2 = EffectStamp('E2', 15, { color: 'green' }).followEffect(Effect1);
-    const Effect3 = EffectStamp('E3', 20, { color: 'yellow' }).followEffect(Effect1);
-    const Effect4 = EffectStamp('E4', 22, { color: 'red' }).followEffect(Effect1);
+    const Effect2 = EffectStamp('E2', 45, { color: 'green' }).followEffect(Effect1);
+    const Effect3 = EffectStamp('E3', 50, { color: 'yellow' }).followEffect(Effect1);
+    const Effect4 = EffectStamp('E4', 52, { color: 'red' }).followEffect(Effect1);
 
     const Effect5 = EffectStamp('E5', 55, { color: 'blue' });
     const target = 50;
@@ -117,17 +119,18 @@ const solution = () => {
         }
     };
 
+    SharedTimer.addLightDesignPage(lightPage);
     const program = SharedTimer.compileTimeline();
+    lightPage.setProgram(program);
     return { lightCanvasParams, Group1, Group2, Group3, Group4, program };
 };
 
 const data = solution();
 
 export const PaintTest7: FunctionComponent<any> = (): ReactElement => {
-    
-    const {lightCanvasParams, Group1, Group2, Group3, Group4, program } = data;
+    const { lightCanvasParams, Group1, Group2, Group3, Group4, program } = data;
     SharedTimer.start();
-    
+
     return (
         <div>
             <Canvas {...lightCanvasParams} />

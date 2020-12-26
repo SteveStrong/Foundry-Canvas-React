@@ -1,5 +1,6 @@
 import { foCollection } from "foundry/models/foCollection.model";
 import { foObject } from "foundry/models/foObject.model";
+import { LightDesignPage } from "./lights";
 import { Instruction, Operation, ProgramManager } from "./program";
 import { TimeTracker, TimeLinePage, ITimeSpec } from "./timeline";
 
@@ -41,25 +42,48 @@ export class GlobalClock extends foObject {
     }
 
 
-    protected _subcomponents: foCollection<TimeLinePage>;
-    get subcomponents(): foCollection<TimeLinePage> {
-        if (!this._subcomponents) {
-            this._subcomponents = new foCollection<TimeLinePage>()
+    protected _timelines: foCollection<TimeLinePage>;
+    get timelines(): foCollection<TimeLinePage> {
+        if (!this._timelines) {
+            this._timelines = new foCollection<TimeLinePage>()
         }
-        return this._subcomponents;
+        return this._timelines;
     }
 
-    clearSubcomponents(): GlobalClock {
-        if (this._subcomponents) {
-            this._subcomponents.clearAll();
+    clearTimelines(): GlobalClock {
+        if (this._timelines) {
+            this._timelines.clearAll();
         }
         return this;
     }
 
     addTimeLinePage(item: TimeLinePage): GlobalClock {
-        if ( !this.subcomponents.isMember(item) && item.myGuid) {
+        if ( !this.timelines.isMember(item) && item.myGuid) {
             item.timeTrack.setSpec(this.timeTrack);
-            this.subcomponents.addMember(item);
+            this.timelines.addMember(item);
+            item.markAsDirty();
+        }
+        return this;
+    }
+
+    protected _lightgroups: foCollection<LightDesignPage>;
+    get lightgroups(): foCollection<LightDesignPage> {
+        if (!this._lightgroups) {
+            this._lightgroups = new foCollection<LightDesignPage>()
+        }
+        return this._lightgroups;
+    }
+
+    clearLightgroups(): GlobalClock {
+        if (this._lightgroups) {
+            this._lightgroups.clearAll();
+        }
+        return this;
+    }
+
+    addLightDesignPage(item: LightDesignPage): GlobalClock {
+        if (!this.lightgroups.isMember(item) && item.myGuid) {
+            this.lightgroups.addMember(item);
             item.markAsDirty();
         }
         return this;
@@ -68,10 +92,10 @@ export class GlobalClock extends foObject {
     initProgramManager(): ProgramManager {
         const manager = new ProgramManager();
 
-        this.subcomponents.forEach(item => {
+        this.timelines.forEach(item => {
             manager.addStep(0, new Instruction(
                 Operation.OFF,
-                { begin: 0, groupid: item.groupId }
+                { Id: 0, groupId: item.groupId }
             ));
         });
         return manager;
@@ -81,24 +105,28 @@ export class GlobalClock extends foObject {
         const manager = this.initProgramManager();
 
         for (let step = 0; step < this.timeTrack.totalSteps; step++) {
-            this.subcomponents.forEach(item => {
+            this.timelines.forEach(item => {
                 item.compileTimeline(manager, step);
             })
         }
-        
+
         return manager;
     }
 
     notifyComponents(globalStep: number, globalTime: number) {
         this.timeTrack.setTimecode(globalStep, globalTime);
 
-        this.subcomponents.forEach(item => {
+        this.lightgroups.forEach(item => {
+            item.setTimecode(globalStep, globalTime).markAsDirty();
+        });
+
+        this.timelines.forEach(item => {
             item.setTimecode(globalStep, globalTime).markAsDirty();
         });
     }
 
     markAsClean() {
-        this.subcomponents.forEach(item => {
+        this.timelines.forEach(item => {
             item.markAsClean();
         });
     }
@@ -106,11 +134,11 @@ export class GlobalClock extends foObject {
     start() {
         this._timer = setTimeout(() => {
             if (!!(this._timer && !(this._timer % 2))) {
-                this.timeCode++;
-
+                
                 this.notifyComponents(this.timeCode, this.timeTrack.timeScale * this.timeCode);
-
-                if (this.timeCode === this.timeTrack.totalSteps) {
+                
+                this.timeCode++;
+                if (this.timeCode > this.timeTrack.totalSteps) {
                     this.timeCode = 0;
                 }
             }

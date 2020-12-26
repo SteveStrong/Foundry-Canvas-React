@@ -2,6 +2,7 @@ import { foObject } from "foundry/models/foObject.model";
 import { foPage } from "foundry/models/foPage.model";
 import { foShape2D, IfoShape2DProperties } from "foundry/models/foShape2D.model";
 import { EffectStep } from "./effect";
+import { Instruction, Operation, ProgramManager } from "./program";
 import { rxPubSub } from "./rxPubSub";
 import { TimeLinePage } from "./timeline";
 
@@ -11,10 +12,15 @@ import { TimeLinePage } from "./timeline";
 
 export type Newable<T> = { new(...args: any[]): T; };
 
+export interface IGroupLookup {
+    [groupId: number]: LightArray<LEDLight>;
+}
 
 export class LightDesignPage extends foPage {
     timeCode: number = 0;
     currentEffect: EffectStep;
+    _programManager: ProgramManager
+    _dictionary: IGroupLookup = { };
 
 
     constructor(properties?: IfoShape2DProperties, parent?: foObject) {
@@ -30,9 +36,31 @@ export class LightDesignPage extends foPage {
     }
 
     addLightArray(item: LightArray<LEDLight>): LightDesignPage {
-        this.subcomponents.addMember(item);
-        this.markAsDirty();
+        if (!this.subcomponents.isMember(item)) {
+            this.subcomponents.addMember(item);
+            this._dictionary[item.groupId] = item;
+            this.markAsDirty();
+        }
         return this;
+    }
+
+    setTimecode(globalStep: number, globalTime: number): foPage {
+        const found = this._programManager && this._programManager.getStep(globalStep);
+        if (found) {
+            found.forEach(item => {
+                const group = this._dictionary[item.data.groupId]
+                group.applyProgram(item);
+            });
+            this.markAsDirty();
+        }
+
+
+        return this;
+    }
+
+    setProgram(programManager: ProgramManager): ProgramManager {
+        this._programManager = programManager;
+        return programManager;
     }
 
     public render(ctx: CanvasRenderingContext2D, deep: boolean = true): foPage {
@@ -84,6 +112,21 @@ export class LightArray<T extends LEDLight> extends foShape2D implements ILightA
 
         this.override(properties);
         this.setPinTop();
+    }
+
+    applyColor(color: string) {
+        this.subcomponents.forEach(child => {
+            child.color = color;
+        })
+    }
+
+    applyProgram(instruction: Instruction) {
+        if (instruction.op === Operation.OFF) {
+            this.applyColor('white')
+        }
+        if (instruction.op === Operation.ON) {
+            this.applyColor(instruction.data.color)
+        }
     }
 
     applyEffect(step: EffectStep) {

@@ -191,16 +191,6 @@ export class TimeLinePage extends foPage {
         this._subcomponents?.forEach(item => {
             const step = item as Effect<TimeStep>;
             step.setTimecode(globalStep, globalTime);
-            // if ( step.isSelected ){
-            //     this.pubsub.broadcast({
-            //         groupId: this.groupId,
-            //         data: step.activeStep()
-            //     })
-            //     rxPubSub.broadcast({
-            //         groupId: this.groupId,
-            //         data: step.activeStep()
-            //     })
-            // }
         });
 
         return this.markAsDirty();

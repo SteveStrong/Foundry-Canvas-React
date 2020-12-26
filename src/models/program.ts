@@ -10,11 +10,18 @@ export enum Operation {
     EXECUTE = 'EXE'
 }
 
+export interface ISettings {
+    Id: number;
+    groupId: number;
+    name?: string;
+    color?: string;
+}
+
 export class Instruction {
     op: Operation
-    data: any
+    data: ISettings
 
-    constructor(op: Operation, data: any) {
+    constructor(op: Operation, data: ISettings) {
         this.op = op;
         this.data = data;
     }
@@ -34,6 +41,10 @@ export class Program {
         this.steps[id].push(obj);
         return this;
     }
+
+    getStep(id: number): Instruction[] {
+        return this.steps[id];
+    }
 }
 
 export class ProgramManager extends foObject {
@@ -48,5 +59,7 @@ export class ProgramManager extends foObject {
     addStep(id: number, obj: Instruction): Program {
         return this.program.addStep(id, obj);
     }
-
+    getStep(id: number): Instruction[] {
+        return this.program.getStep(id);
+    }
 }

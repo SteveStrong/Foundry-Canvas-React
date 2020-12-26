@@ -50,7 +50,7 @@ export class Effect<T extends EffectStep> extends TimeLine<T> implements ITimeLi
             const first = this.subcomponents.first();
             manager.addStep(globalStep, new Instruction(
                 Operation.ON,
-                { begin: globalStep, myName: this.myName, groupid: group, color: first.color}
+                { Id: globalStep, name: this.myName, groupId: group, color: first.color}
             ));
         }
 
@@ -59,7 +59,7 @@ export class Effect<T extends EffectStep> extends TimeLine<T> implements ITimeLi
             const last = this.subcomponents.last();
             manager.addStep(globalStep, new Instruction(
                 Operation.OFF,
-                { end: globalStep, myName: this.myName, groupid: group, color: last.color}
+                { Id: globalStep, name: this.myName, groupId: group, color: last.color}
             ));
         }
 
