@@ -3,6 +3,8 @@
 
 // https://elchininet.github.io/ColorTranslator/
 
+//https://stackoverflow.com/questions/1573053/javascript-function-to-convert-color-names-to-hex-codes
+
 import { Canvas } from 'Canvas';
 
 import React, { FunctionComponent, ReactElement } from 'react';
@@ -60,14 +62,14 @@ const solution = () => {
         }).horizontal(TimeStep, props);
     };
 
-    const Effect0 = EffectStamp('E0', 10, { color: 'cyan' });
+    const Effect0 = EffectStamp('E0', 10, { color: '#FF5733' });
 
-    const Effect1 = EffectStamp('E1', 30, { color: 'orange' }).setStepOffset(10);
-    const Effect2 = EffectStamp('E2', 45, { color: 'green' }).followEffect(Effect1);
-    const Effect3 = EffectStamp('E3', 50, { color: 'yellow' }).followEffect(Effect1);
-    const Effect4 = EffectStamp('E4', 52, { color: 'red' }).followEffect(Effect1);
+    const Effect1 = EffectStamp('E1', 30, { color: '#54C82B' }).setStepOffset(10);
+    const Effect2 = EffectStamp('E2', 45, { color: '#2B7CC8' }).followEffect(Effect1);
+    const Effect3 = EffectStamp('E3', 50, { color: '#7FEE10' }).followEffect(Effect1);
+    const Effect4 = EffectStamp('E4', 52, { color: '#10CFEE' }).followEffect(Effect1);
 
-    const Effect5 = EffectStamp('E5', 55, { color: 'blue' });
+    const Effect5 = EffectStamp('E5', 55, { color: '#B72BC8' });
     const target = 50;
     Effect5.setStepOffset(target);
 
