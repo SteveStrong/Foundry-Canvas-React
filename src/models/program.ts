@@ -1,4 +1,5 @@
 import { foObject } from "foundry/models/foObject.model";
+import { Tools } from "foundry/models/foTools";
 
 export enum Operation {
     ON = 'ON',
@@ -45,6 +46,17 @@ export class Program {
     getStep(id: number): Instruction[] {
         return this.steps[id];
     }
+
+    programAsInstructionList(): Instruction[] {
+        const list:any = []
+        Tools.forEachKeyValue(this.steps, (key:number, value: Instruction[]) => {
+            value.forEach(item => {
+                item['seq'] = item.data.Id;
+                list.push(item);
+            });
+        })
+        return list;
+    }
 }
 
 export class ProgramManager extends foObject {
@@ -61,5 +73,9 @@ export class ProgramManager extends foObject {
     }
     getStep(id: number): Instruction[] {
         return this.program.getStep(id);
+    }
+
+    programAsInstructionList(): Instruction[] {
+        return this.program.programAsInstructionList();
     }
 }

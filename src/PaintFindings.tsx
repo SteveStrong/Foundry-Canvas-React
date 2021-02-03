@@ -129,7 +129,7 @@ const solution = () => {
 
 const data = solution();
 
-export const PaintTest7: FunctionComponent<any> = (): ReactElement => {
+export const PaintFindings: FunctionComponent<any> = (): ReactElement => {
     const { lightCanvasParams, Group1, Group2, Group3, Group4, program } = data;
     SharedTimer.start();
 

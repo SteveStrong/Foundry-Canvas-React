@@ -1,11 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import { PaintTest7 } from 'PaintTest7';
+import { PaintFindings } from 'PaintFindings';
 
 ReactDOM.render(
     <React.StrictMode>
-        <PaintTest7 />
+        <PaintFindings />
     </React.StrictMode>,
     document.getElementById('root')
 );
